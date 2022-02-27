@@ -1,62 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:panic_button_app/widgets/drawer_widget.dart';
 
-import 'package:panic_button_app/models/models.dart';
-import 'package:panic_button_app/screens/screens.dart';
-
-import 'package:panic_button_app/services/services.dart';
-import 'package:panic_button_app/widgets/widgets.dart';
-
+import '../blocs/gps/gps_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Panic Button'),
+          backgroundColor: Colors.red[400],
+          actions: [
+            IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+          ],
+        ),
+        drawer: const DrawerMenu(),
+        body: BlocBuilder<GpsBloc, GpsState>(
+          builder: (context, state) {
+            return Stack(children: [
+              state.isAllGranted ? MapView() : Text("Espere..."),
+            ]);
+          },
+        ));
+  }
+}
+
+class MapView extends StatelessWidget {
+  const MapView({Key? key}) : super(key: key);
+
+  static final CameraPosition IvanHouse = CameraPosition(
+      target: LatLng(10.938986, -74.801250), zoom: 19.151926040649414);
 
   @override
   Widget build(BuildContext context) {
-
-    final productsService = Provider.of<ProductsService>(context);
-    final authService = Provider.of<AuthService>(context, listen: false);
-    
-    if( productsService.isLoading ) return LoadingScreen();
-
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Panic Button'),
-        leading: IconButton(
-          icon: Icon( Icons.login_outlined ),
-          onPressed: () {
-
-            authService.logout();
-            Navigator.pushReplacementNamed(context, 'login');
-
-          },
-        ),
-      ),
-      body: ListView.builder(
-        itemCount: productsService.products.length,
-        itemBuilder: ( BuildContext context, int index ) => GestureDetector(
-          onTap: () {
-
-            productsService.selectedProduct = productsService.products[index].copy();
-            Navigator.pushNamed(context, 'product');
-          },
-          child: ProductCard(
-            product: productsService.products[index],
-          ),
-        )
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon( Icons.add ),
-        onPressed: () {
-
-          productsService.selectedProduct = new Product(
-            available: false, 
-            name: '', 
-            price: 0
-          );
-          Navigator.pushNamed(context, 'product');
-        },
-      ),
-   );
+    return GoogleMap(
+      initialCameraPosition: IvanHouse,
+    );
   }
 }
