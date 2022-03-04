@@ -36,13 +36,15 @@ class _HeaderIconState extends State<_HeaderIcon> {
   bool _headerIcon = false;
   @override
   Widget build(BuildContext context) {
-
-
     return SafeArea(
       child: Container(
         width: double.infinity,
         margin: EdgeInsets.only(top: 30),
-        child: Image(image: AssetImage('assets/55-error-outline.gif'), width: 150, height: 150,),
+        child: Image(
+          image: AssetImage('assets/55-error-outline.gif'),
+          width: 150,
+          height: 150,
+        ),
       ),
     );
   }
@@ -71,10 +73,8 @@ class _RedBox extends StatelessWidget {
 
   BoxDecoration _redBackground() => BoxDecoration(
           gradient: LinearGradient(colors: [
-            Colors.redAccent[400]!,
-            Color.fromARGB(255, 221, 5, 48),
-
-
+        Colors.redAccent[400]!,
+        Color.fromARGB(255, 221, 5, 48),
       ]));
 }
 

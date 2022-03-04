@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "923215387352",
+    "firebase_url": "https://bodegalert.firebaseio.com",
+    "project_id": "bodegalert",
+    "storage_bucket": "bodegalert.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:923215387352:android:d313b5585a877f408155ad",
+        "android_client_info": {
+          "package_name": "io.cordova.alarmu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "923215387352-42re9ud06lt28flp1o8l4jgspf11vvi7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.cordova.alarmu",
+            "certificate_hash": "1c6d9930907954c776b7c6e3519e4f43a926bec1"
+          }
+        },
+        {
+          "client_id": "923215387352-iarbqrnk8dem2t7negusgp4lv3jg8jsv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf-L9VmCcYHpQ13Rllrdl0k54Ma5QSiQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "923215387352-iarbqrnk8dem2t7negusgp4lv3jg8jsv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "923215387352-ajtg2qkbj90ecvf7uodb73dp8a2hu6f9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.cordova.alarmu"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

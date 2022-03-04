@@ -1,4 +1,4 @@
-package com.example.panic_button_app
+package io.cordova.alarmu
 
 import io.flutter.embedding.android.FlutterActivity
 

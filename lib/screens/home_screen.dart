@@ -1,19 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:panic_button_app/blocs/location/location_bloc.dart';
+import 'package:panic_button_app/blocs/map/map_bloc.dart';
 import 'package:panic_button_app/widgets/drawer_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../blocs/gps/gps_bloc.dart';
+import '../widgets/panic_button.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late LocationBloc locationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    locationBloc = BlocProvider.of<LocationBloc>(context);
+    locationBloc.getCurrentPosition();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Panic Button'),
+          title: Center(child: const Text('Panic Button')),
           backgroundColor: Colors.red[400],
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, 'notification');
+                },
+                icon: Icon(Icons.notifications))
           ],
         ),
         drawer: const DrawerMenu(),
@@ -21,6 +44,19 @@ class HomeScreen extends StatelessWidget {
           builder: (context, state) {
             return Stack(children: [
               state.isAllGranted ? MapView() : Text("Espere..."),
+              Positioned(
+                top: size.height - 180,
+                left: size.width - 290,
+                child: PanicButton(
+                    message: "PANIC",
+                    height: 80,
+                    width: 200,
+                    color: Colors.red,
+                    iconSize: 50,
+                    icon: Icons.add_alert_sharp,
+                    radius: 100,
+                    onClick: (() {})),
+              ),
             ]);
           },
         ));
@@ -30,13 +66,26 @@ class HomeScreen extends StatelessWidget {
 class MapView extends StatelessWidget {
   const MapView({Key? key}) : super(key: key);
 
-  static final CameraPosition IvanHouse = CameraPosition(
-      target: LatLng(10.938986, -74.801250), zoom: 19.151926040649414);
-
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      initialCameraPosition: IvanHouse,
+    final mapBloc = BlocProvider.of<MapBloc>(context);
+    return BlocBuilder<LocationBloc, LocationState>(
+      builder: (context, state) {
+        if (state.lastKnownLocation == null)
+          return const Center(child: Text('Espere por favor...'));
+
+        return GoogleMap(
+          myLocationEnabled: true,
+          initialCameraPosition: CameraPosition(
+            target: state.lastKnownLocation!,
+            zoom: 16,
+          ),
+          zoomControlsEnabled: true,
+          tileOverlays: const {},
+          onMapCreated: (controller) =>
+              mapBloc.add(OnMapInitialzedEvent(controller)),
+        );
+      },
     );
   }
 }

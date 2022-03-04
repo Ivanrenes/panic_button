@@ -1,83 +1,273 @@
 import 'dart:convert';
+import 'dart:io' show File, Platform;
+import 'package:intl_phone_field/phone_number.dart';
+import 'package:path/path.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:http/http.dart' as http;
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:panic_button_app/models/user.dart' as pb;
+import 'package:panic_button_app/services/push_notifications_service.dart';
 
 class AuthService extends ChangeNotifier {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  final String _baseUrl = 'identitytoolkit.googleapis.com';
-  final String _firebaseToken = 'AIzaSyBcytoCbDUARrX8eHpcR-Bdrdq0yUmSjf8';
+  bool _isValidUser = false;
+  bool _isValidOTP = false;
+  bool _isReady = false;
+  bool _isValidatingOTP = false;
+  bool _isLogging = false;
+  bool get isLogging => _isLogging;
+  String _imagePath = '';
+  bool _isRegistered = false;
 
-  final storage = new FlutterSecureStorage();
+  bool get isRegistered => _isRegistered;
 
+  set isRegistered(bool isRegistered) {
+    _isRegistered = isRegistered;
+    notifyListeners();
+  }
 
-  // Si retornamos algo, es un error, si no, todo bien!
-  Future<String?> createUser( String email, String password ) async {
+  String get imagePath => _imagePath;
 
-    final Map<String, dynamic> authData = {
-      'email': email,
-      'password': password,
-      'returnSecureToken': true
-    };
+  set imagePath(String imagePath) {
+    _imagePath = imagePath;
+    notifyListeners();
+  }
 
-    final url = Uri.https(_baseUrl, '/v1/accounts:signUp', {
-      'key': _firebaseToken
+  set isLogging(bool isLogging) {
+    _isLogging = isLogging;
+  }
+
+  Map<String, dynamic> dataFromUsers = {};
+  late pb.User _userLogged;
+
+  pb.User get userLogged => _userLogged;
+
+  set userLogged(pb.User userLogged) {
+    _userLogged = userLogged;
+    notifyListeners();
+  }
+
+  bool get isValidatingOTP => _isValidatingOTP;
+
+  set isValidatingOTP(bool isValidatingOTP) {
+    _isValidatingOTP = isValidatingOTP;
+    notifyListeners();
+  }
+
+  String _errorMessage = '';
+
+  String get errorMessage => _errorMessage;
+
+  set errorMessage(String errorMessage) {
+    _errorMessage = errorMessage;
+    notifyListeners();
+  }
+
+  bool get isReady => _isReady;
+
+  set isReady(bool isReady) {
+    _isReady = isReady;
+    notifyListeners();
+  }
+
+  String verificationCode = '';
+
+  set isValidUser(bool val) {
+    _isValidUser = val;
+    notifyListeners();
+  }
+
+  bool get isValidUser => _isValidUser;
+
+  set isValidOTP(bool val) {
+    _isValidOTP = val;
+    notifyListeners();
+  }
+
+  bool get isValidOTP => _isValidOTP;
+
+  Future verifyOtp(otpCode, userData) async {
+    try {
+      await _auth
+          .signInWithCredential(PhoneAuthProvider.credential(
+              verificationId: verificationCode, smsCode: otpCode))
+          .then((user) async => {
+                if (user != null)
+                  {
+                    if (userData != null)
+                      {
+                        userData.user_uid = _auth.currentUser!.uid,
+                        await _firestore
+                            .collection('users')
+                            .doc(_auth.currentUser!.uid)
+                            .set(userData.toJson(), SetOptions(merge: true))
+                            .then((value) =>
+                                {userLogged = userData, isLogging = false})
+                            .catchError((onError) => {
+                                  errorMessage = errorMessage.toString(),
+                                  debugPrint('Error saving user to db.' +
+                                      onError.toString())
+                                })
+                      }
+                    else
+                      {
+                        await _firestore
+                            .collection('users')
+                            .doc(_auth.currentUser!.uid)
+                            .get()
+                            .then((value) => {
+                                  userLogged = pb.User.fromJson(value.data()!),
+                                  isValidOTP = true,
+                                  isLogging = true
+                                })
+                            .catchError((onError) => {
+                                  errorMessage = errorMessage.toString(),
+                                  debugPrint('Error saving user to db.' +
+                                      onError.toString()),
+                                  isValidOTP = false
+                                }),
+                        //CHECK IF THE DEVICE IS ALREADY REGISTERED
+                        userLogged.devices
+                                .where((device) =>
+                                    device["device"] ==
+                                    PushNotificationService.token)
+                                .toList()
+                                .isEmpty
+                            ? await _firestore
+                                .collection('users')
+                                .doc(_auth.currentUser!.uid)
+                                .update({
+                                "devices": [
+                                  ...userLogged.devices,
+                                  {
+                                    "device": PushNotificationService.token,
+                                    "os":
+                                        Platform.isAndroid ? "android" : "ios",
+                                    "created":
+                                        DateTime.now().millisecondsSinceEpoch
+                                  }
+                                ]
+                              }).catchError((onError) => {
+                                      errorMessage = errorMessage.toString(),
+                                      debugPrint('Error saving user to db.' +
+                                          onError.toString())
+                                    })
+                            : null
+                      }
+                  }
+              })
+          .catchError(
+              (onError) => {print('error ${onError}'), isValidOTP = false});
+      isValidOTP = true;
+    } catch (e) {
+      isValidOTP = false;
+      print(e);
+    }
+  }
+
+  Future login(phoneNumber) async {
+    //first we will check if a user with this cell number exists
+    await _firestore
+        .collection('users')
+        .where('phone', isEqualTo: phoneNumber)
+        .get()
+        .then((result) {
+      print('PHONE ${result}');
+
+      if (result.docs.length > 0) {
+        isValidUser = true;
+      }
     });
 
-    final resp = await http.post(url, body: json.encode(authData));
-    final Map<String, dynamic> decodedResp = json.decode( resp.body );
-
-    if ( decodedResp.containsKey('idToken') ) {
-        // Token hay que guardarlo en un lugar seguro
-        await storage.write(key: 'token', value: decodedResp['idToken']);
-        // decodedResp['idToken'];
-        return null;
+    if (isValidUser) {
+      //ok, we have a valid user, now lets do otp verification
+      Future<void> verifyPhoneNumber = _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (phoneAuthCredential) {
+          print("Verification Completed");
+        },
+        verificationFailed: (FirebaseAuthException error) {
+          print(error);
+        },
+        codeSent: (verificationId, [forceResendingToken]) {
+          print(verificationId);
+          verificationCode = verificationId;
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          verificationCode = verificationId;
+        },
+        timeout: Duration(seconds: 60),
+      );
+      await verifyPhoneNumber;
     } else {
-      return decodedResp['error']['message'];
+      //non valid user
+      return 'Number not found, please sign up first';
     }
-
   }
 
-    Future<String?> login( String email, String password ) async {
+  Future signUp(userData) async {
+    //first we will check if a user with this cell number exists
 
-    final Map<String, dynamic> authData = {
-      'email': email,
-      'password': password,
-      'returnSecureToken': true
-    };
+    //ok, we have a valid user, now lets do otp verification
+    Future<void> verifyPhoneNumber = _auth.verifyPhoneNumber(
+      phoneNumber: userData.phone,
+      verificationCompleted: (phoneAuthCredential) {},
+      verificationFailed: (FirebaseAuthException error) {
+        print(error);
+      },
+      codeSent: (verificationId, [forceResendingToken]) {
+        verificationCode = verificationId;
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        verificationCode = verificationId;
+      },
+      timeout: Duration(seconds: 60),
+    );
+    await verifyPhoneNumber;
+  }
 
-    final url = Uri.https(_baseUrl, '/v1/accounts:signInWithPassword', {
-      'key': _firebaseToken
+  Future<void> logout() async {
+    await _auth.signOut();
+  }
+
+  //UPLOAD IMAGE TO FIREBASE
+  Future uploadImageToFirebase(BuildContext context, File imageFile) async {
+    String fileName = basename(imageFile.path);
+    Reference ref = _storage.ref().child('uploads/avatars/$fileName');
+    UploadTask uploadTask = ref.putFile(imageFile);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    taskSnapshot.ref.getDownloadURL().then(
+          (value) => imagePath = value,
+        );
+  }
+
+  Future updateProfilePicture(String imagePath) async {
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .update({"avatar": imagePath}).then((result) {});
+  }
+
+  Future verifyIsRegistered(phoneNumber) async {
+    print(phoneNumber);
+    await _firestore
+        .collection('users')
+        .where('phone', isEqualTo: phoneNumber)
+        .get()
+        .then((result) {
+      if (result.docs.length > 0) {
+        isRegistered = true;
+      } else {
+        isRegistered = false;
+      }
     });
-
-    final resp = await http.post(url, body: json.encode(authData));
-    final Map<String, dynamic> decodedResp = json.decode( resp.body );
-
-    if ( decodedResp.containsKey('idToken') ) {
-        // Token hay que guardarlo en un lugar seguro
-        // decodedResp['idToken'];
-        await storage.write(key: 'token', value: decodedResp['idToken']);
-        return null;
-    } else {
-      return decodedResp['error']['message'];
-    }
-
   }
-
-  Future logout() async {
-    await storage.delete(key: 'token');
-    return;
-  }
-
-  Future<String> readToken() async {
-
-    return await storage.read(key: 'token') ?? '';
-
-  }
-
-
-
 }
