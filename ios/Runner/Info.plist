@@ -18,12 +18,31 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app-1-923215387352-ios-94b10cfe79c013678155ad</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.923215387352-ajtg2qkbj90ecvf7uodb73dp8a2hu6f9</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Necesito acceso a la cámara para tomar fotos</string>
+	<string>Para poder tomar una foto para subirla como foto de perfil es necesario que otorgues permisos de uso de camara</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Always and when in use!</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -33,9 +52,9 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location when open.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Necesito acceso al micrófono para grabar video</string>
+	<string>Para poder subir audios es necesario que otorgues permisos de uso de microfono</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Necesito acceso a la librería para seleccionar fotos</string>
+	<string>Para poder agregar una foto de perfil es necesario que otorgues permisos de lectura de fotos</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
@@ -44,12 +63,6 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Para poder agregar una foto de perfil es necesario que otorgues permisos de lectura de fotos</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Para poder tomar una foto para subirla como foto de perfil es necesario que otorgues permisos de uso de camara</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Para poder subir audios es necesario que otorgues permisos de uso de microfono</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

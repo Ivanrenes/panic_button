@@ -45,10 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
             return Stack(children: [
               state.isAllGranted ? MapView() : Text("Espere..."),
               Positioned(
-                top: size.height - 180,
-                left: size.width - 290,
+                top: size.height - 220,
+                left: size.width - 300,
                 child: PanicButton(
-                    message: "PANIC",
+                    message: "PANICO",
                     height: 80,
                     width: 200,
                     color: Colors.red,
