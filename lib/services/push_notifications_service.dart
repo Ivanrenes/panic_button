@@ -4,7 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 class PushNotificationService {
   static FirebaseMessaging messaging = FirebaseMessaging.instance;
   static String? token;
-  static StreamController<Map<String, dynamic>> _messageStream =
+  static final StreamController<Map<String, dynamic>> _messageStream =
       StreamController.broadcast();
   static Stream<Map<String, dynamic>> get messagesStream =>
       _messageStream.stream;
@@ -62,8 +62,20 @@ class PushNotificationService {
         criticalAlert: false,
         provisional: false,
         sound: true);
-
-    print('User push notification status ${settings.authorizationStatus}');
+    if(settings.authorizationStatus == AuthorizationStatus.authorized){
+      print('Usser garanted Permission');
+    } else if(settings.authorizationStatus == AuthorizationStatus.provisional){
+      print('User granted provisional permission');
+    } else {
+      print('User declided or has not accepted permission');
+    }
+    //for forerground
+    await messaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true
+    );
+    // print('User push notification status ${settings.authorizationStatus}');
   }
 
   static closeStreams() {

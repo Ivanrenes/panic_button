@@ -93,7 +93,8 @@ class _LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginForm = Provider.of<LoginFormProvider>(context);
-
+    final auth = Provider.of<AuthService>(context, listen: false);
+    print(auth.isLogging);
     return Padding(
       padding: EdgeInsets.all(10),
       child: Form(

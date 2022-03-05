@@ -57,7 +57,10 @@
 	<string>Para poder agregar una foto de perfil es necesario que otorgues permisos de lectura de fotos</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>location</string>
+		<string>processing</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

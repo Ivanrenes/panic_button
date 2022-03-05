@@ -25,7 +25,10 @@ import 'screens/onboarding/gps_permission.dart';
 
 bool? GPSPermissionGranted;
 void main() async {
-  AwesomeNotifications().initialize(
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences _prefs = await SharedPreferences.getInstance();
+  GPSPermissionGranted = _prefs.getBool("GPSPermisionGranted");
+  await AwesomeNotifications().initialize(
     null,
     [
       NotificationChannel(
@@ -37,14 +40,9 @@ void main() async {
       ),
     ],
   );
-  WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences _prefs = await SharedPreferences.getInstance();
-  GPSPermissionGranted = _prefs.getBool("GPSPermisionGranted");
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   await PushNotificationService.initializeApp();
 
   runApp(MultiBlocProvider(
@@ -56,11 +54,13 @@ void main() async {
       //     create: (context) =>
       //         MapBloc(locationBloc: BlocProvider.of<LocationBloc>(context))),
     ],
-    child: AppState(),
+    child: const AppState(),
   ));
 }
 
 class AppState extends StatefulWidget {
+  const AppState({Key? key}) : super(key: key);
+
   @override
   State<AppState> createState() => _AppStateState();
 }
@@ -75,15 +75,15 @@ class _AppStateState extends State<AppState> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Habilita las notificaciones'),
-              content: Text(
+              title: const Text('Habilita las notificaciones'),
+              content: const Text(
                   'Nuestra App funcióna gracias a la notificaciónes es IMPORTANTE activarlas'),
               actions: [
                 TextButton(
                   onPressed: () => AwesomeNotifications()
                       .requestPermissionToSendNotifications()
                       .then((_) => Navigator.pop(context)),
-                  child: Text(
+                  child: const Text(
                     'Permitir',
                     style: TextStyle(
                       color: Colors.teal,
@@ -99,18 +99,19 @@ class _AppStateState extends State<AppState> {
       },
     );
 
-    PushNotificationService.messagesStream
-        .listen((Map<String, dynamic> message) async {
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: createUniqueId(),
-          channelKey: 'basic_channel',
-          title:
-              '${Emojis.person_gesture_person_raising_hand + Emojis.sound_bell + message["title"]} !!!!',
-          body: message["body"],
-        ),
-      );
-    });
+    // PushNotificationService.messagesStream
+    //   .listen((Map<String, dynamic> message) async {
+    //     print('notificacion recibida $message');
+    //     await AwesomeNotifications().createNotification(
+    //       content: NotificationContent(
+    //         id: createUniqueId(),
+    //         channelKey: 'basic_channel',
+    //         title:
+    //             '${Emojis.person_gesture_person_raising_hand + Emojis.sound_bell + message["title"]} !!!!',
+    //         body: message["body"],
+    //       ),
+    //     );
+    //   });
   }
 
   @override
@@ -123,12 +124,14 @@ class _AppStateState extends State<AppState> {
         ),
         ChangeNotifierProvider(create: (_) => ProductsService()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     );
   }
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
