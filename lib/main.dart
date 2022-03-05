@@ -99,19 +99,19 @@ class _AppStateState extends State<AppState> {
       },
     );
 
-    // PushNotificationService.messagesStream
-    //   .listen((Map<String, dynamic> message) async {
-    //     print('notificacion recibida $message');
-    //     await AwesomeNotifications().createNotification(
-    //       content: NotificationContent(
-    //         id: createUniqueId(),
-    //         channelKey: 'basic_channel',
-    //         title:
-    //             '${Emojis.person_gesture_person_raising_hand + Emojis.sound_bell + message["title"]} !!!!',
-    //         body: message["body"],
-    //       ),
-    //     );
-    //   });
+    PushNotificationService.messagesStream
+      .listen((Map<String, dynamic> message) async {
+        print('notificacion recibida $message');
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: createUniqueId(),
+            channelKey: 'basic_channel',
+            title:
+                '${Emojis.person_gesture_person_raising_hand + Emojis.sound_bell + message["title"]} !!!!',
+            body: message["body"],
+          ),
+        );
+      });
   }
 
   @override
