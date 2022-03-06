@@ -20,42 +20,45 @@ class CheckOtpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = ModalRoute.of(context)!.settings.arguments;
+    final routename = ModalRoute.of(context)!.settings.arguments;
+    print('data: $routename');
 
     return Scaffold(
       body: AuthBackground(
           child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 250),
+            const SizedBox(height: 250),
             CardContainer(
                 child: Column(
               children: [
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Center(
                   child: Text('Código de verificación',
                       style: Theme.of(context).textTheme.headline5),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _OtpVerificationForm()
               ],
             )),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             TextButton(
                 onPressed: () => {
                       if (user != null)
-                        {Navigator.popAndPushNamed(context, 'login')}
+                        {Navigator.of(context).pop()}
                       else
-                        {Navigator.popAndPushNamed(context, 'signup_step_two')}
+                        {Navigator.popAndPushNamed(context, 'login')}
+                        
                     },
                 style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(
                         Colors.redAccent.withOpacity(0.1)),
-                    shape: MaterialStateProperty.all(StadiumBorder())),
-                child: Text(
+                    shape: MaterialStateProperty.all(const StadiumBorder())),
+                child: const Text(
                   'Volver',
                   style: TextStyle(fontSize: 18, color: Colors.black87),
                 )),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
           ],
         ),
       )),

@@ -18,6 +18,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../blocs/gps/gps_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -42,17 +44,17 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 250),
+            const SizedBox(height: 250),
             CardContainer(
                 child: Column(
               children: [
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text('Ingreso', style: Theme.of(context).textTheme.headline4),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _LoginForm()
               ],
             )),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             BlocListener<LocationBloc, LocationState>(
               bloc: locationBloc = BlocProvider.of<LocationBloc>(context),
               listener: (context, state) async {
@@ -76,13 +78,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(
                           Colors.redAccent.withOpacity(0.1)),
-                      shape: MaterialStateProperty.all(StadiumBorder())),
-                  child: Text(
+                      shape: MaterialStateProperty.all(const StadiumBorder())),
+                  child: const Text(
                     'Crear una nueva cuenta',
                     style: TextStyle(fontSize: 18, color: Colors.black87),
                   )),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
           ],
         ),
       )),
@@ -97,7 +99,7 @@ class _LoginForm extends StatelessWidget {
     final auth = Provider.of<AuthService>(context, listen: false);
     print(auth.isLogging);
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Form(
         key: loginForm.formKey,
         child: Column(
@@ -109,18 +111,18 @@ class _LoginForm extends StatelessWidget {
                   prefixIcon: Icons.lock_outline),
               initialCountryCode: 'CO',
               initialValue: loginForm.phoneNumber,
-              countries: ["CO", "US"],
+              countries: const ["CO", "US"],
               validator: checkEmpty,
               autovalidateMode: AutovalidateMode.always,
               pickerDialogStyle: PickerDialogStyle(
                   searchFieldInputDecoration:
-                      InputDecoration(label: Text("Buscar país"))),
+                      const InputDecoration(label: Text("Buscar país"))),
               onChanged: (phone) {
                 loginForm.phoneNumber = '${phone.countryCode}${phone.number}';
               },
               invalidNumberMessage: "Este número no es valido",
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             MaterialButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
@@ -128,10 +130,10 @@ class _LoginForm extends StatelessWidget {
                 elevation: 0,
                 color: Colors.redAccent,
                 child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                     child: Text(
                       loginForm.isLoading ? 'Espere' : 'Ingresar',
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     )),
                 onPressed: loginForm.isLoading
                     ? null

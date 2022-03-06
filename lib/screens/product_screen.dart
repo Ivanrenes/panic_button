@@ -12,6 +12,8 @@ import 'package:panic_button_app/widgets/widgets.dart';
 
 
 class ProductScreen extends StatelessWidget {
+  const ProductScreen({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class _ProductScreenBody extends StatelessWidget {
                   left: 20,
                   child: IconButton(
                     onPressed: () => Navigator.of(context).pop(), 
-                    icon: Icon( Icons.arrow_back_ios_new, size: 40, color: Colors.white ),
+                    icon: const Icon( Icons.arrow_back_ios_new, size: 40, color: Colors.white ),
                   )
                 ),
 
@@ -62,8 +64,8 @@ class _ProductScreenBody extends StatelessWidget {
                   child: IconButton(
                     onPressed: () async {
                       
-                      final picker = new ImagePicker();
-                      final PickedFile? pickedFile = await picker.getImage(
+                      final ImagePicker picker = ImagePicker();
+                      final XFile? pickedFile = await picker.pickImage(
                         // source: ImageSource.gallery,
                         source: ImageSource.camera,
                         imageQuality: 100
@@ -78,7 +80,7 @@ class _ProductScreenBody extends StatelessWidget {
                       
 
                     }, 
-                    icon: Icon( Icons.camera_alt_outlined, size: 40, color: Colors.white ),
+                    icon: const Icon( Icons.camera_alt_outlined, size: 40, color: Colors.white ),
                   )
                 )
               ],
@@ -86,7 +88,7 @@ class _ProductScreenBody extends StatelessWidget {
 
             _ProductForm(),
 
-            SizedBox( height: 100 ),
+            const SizedBox( height: 100 ),
 
           ],
         ),
@@ -95,8 +97,8 @@ class _ProductScreenBody extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         child: productService.isSaving 
-          ? CircularProgressIndicator( color: Colors.white )
-          : Icon( Icons.save_outlined ),
+          ? const CircularProgressIndicator( color: Colors.white )
+          : const Icon( Icons.save_outlined ),
         onPressed: productService.isSaving 
           ? null
           : () async {
@@ -125,9 +127,9 @@ class _ProductForm extends StatelessWidget {
     final product = productForm.product;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10 ),
+      padding: const EdgeInsets.symmetric(horizontal: 10 ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         width: double.infinity,
         decoration: _buildBoxDecoration(),
         child: Form(
@@ -136,7 +138,7 @@ class _ProductForm extends StatelessWidget {
           child: Column(
             children: [
 
-              SizedBox( height: 10 ),
+              const SizedBox( height: 10 ),
 
               TextFormField(
                 initialValue: product.name,
@@ -151,7 +153,7 @@ class _ProductForm extends StatelessWidget {
                 ),
               ),
 
-              SizedBox( height: 30 ),
+              const SizedBox( height: 30 ),
 
               TextFormField(
                 initialValue: '${product.price}',
@@ -172,16 +174,16 @@ class _ProductForm extends StatelessWidget {
                 ),
               ),
               
-              SizedBox( height: 30 ),
+              const SizedBox( height: 30 ),
               SwitchListTile.adaptive(
                 value: product.available, 
-                title: Text('Disponible'),
+                title: const Text('Disponible'),
                 activeColor: Colors.indigo,
                 onChanged: productForm.updateAvailability
               ),
 
 
-              SizedBox( height: 30 )
+              const SizedBox( height: 30 )
 
             ],
           ),
@@ -192,11 +194,11 @@ class _ProductForm extends StatelessWidget {
 
   BoxDecoration _buildBoxDecoration() => BoxDecoration(
     color: Colors.white,
-    borderRadius: BorderRadius.only( bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
+    borderRadius: const BorderRadius.only( bottomRight: const Radius.circular(25), bottomLeft: const Radius.circular(25)),
     boxShadow: [
       BoxShadow(
         color: Colors.black.withOpacity(0.05),
-        offset: Offset(0,5),
+        offset: const Offset(0,5),
         blurRadius: 5
       )
     ]

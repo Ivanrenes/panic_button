@@ -243,6 +243,8 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<void> logout() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    await _prefs.setString('userLogged', '');
     await _auth.signOut();
   }
 
@@ -252,8 +254,8 @@ class AuthService extends ChangeNotifier {
     Reference ref = _storage.ref().child('uploads/avatars/$fileName');
     UploadTask uploadTask = ref.putFile(imageFile);
     TaskSnapshot taskSnapshot = await uploadTask;
-    taskSnapshot.ref.getDownloadURL().then(
-          (value) => imagePath = value,
+    await taskSnapshot.ref.getDownloadURL().then(
+          (value) =>  imagePath = value
         );
   }
 
@@ -265,7 +267,6 @@ class AuthService extends ChangeNotifier {
   }
 
   Future verifyIsRegistered(phoneNumber) async {
-    print(phoneNumber);
     await _firestore
         .collection('users')
         .where('phone', isEqualTo: phoneNumber)

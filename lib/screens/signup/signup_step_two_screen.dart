@@ -16,10 +16,13 @@ import 'package:panic_button_app/ui/input_decorations.dart';
 import 'package:panic_button_app/widgets/widgets.dart';
 
 class SignUpStepTwoScreen extends StatelessWidget {
-  ScrollController _scrollController = new ScrollController(
+  SignUpStepTwoScreen({Key? key}) : super(key: key);
+
+  final ScrollController _scrollController = ScrollController(
     initialScrollOffset: 120,
     keepScrollOffset: true,
   );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,33 +32,33 @@ class SignUpStepTwoScreen extends StatelessWidget {
         controller: _scrollController,
         child: Column(
           children: [
-            SizedBox(height: 250),
+            const SizedBox(height: 250),
             CardContainer(
                 child: Column(
               children: [
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text('Información adiciónal',
                     style: Theme.of(context).textTheme.headline5),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: _SignUpStepTwoForm(),
                 ),
               ],
             )),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             TextButton(
                 onPressed: () =>
                     Navigator.pushReplacementNamed(context, 'login'),
                 style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(
                         Colors.indigo.withOpacity(0.1)),
-                    shape: MaterialStateProperty.all(StadiumBorder())),
-                child: Text(
+                    shape: MaterialStateProperty.all(const StadiumBorder())),
+                child: const Text(
                   '¿Ya tienes una cuenta?',
                   style: TextStyle(fontSize: 18, color: Colors.black87),
                 )),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
           ],
         ),
       ),
@@ -74,7 +77,7 @@ class _SignUpStepTwoForm extends StatelessWidget {
         key: signUpForm.formKeyTwo,
         child: Column(
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
@@ -85,7 +88,7 @@ class _SignUpStepTwoForm extends StatelessWidget {
                 onChanged: (value) => signUpForm.email = value,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: isValidEmail),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
@@ -96,7 +99,7 @@ class _SignUpStepTwoForm extends StatelessWidget {
                     prefixIcon: Icons.home),
                 onChanged: (value) => signUpForm.address = value,
                 validator: checkEmpty),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
@@ -117,7 +120,7 @@ class _SignUpStepTwoForm extends StatelessWidget {
                     prefixIcon: Icons.location_city),
                 onChanged: (value) => signUpForm.departament = value,
                 validator: checkEmpty),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
@@ -128,7 +131,7 @@ class _SignUpStepTwoForm extends StatelessWidget {
                     prefixIcon: Icons.business_outlined),
                 onChanged: (value) => signUpForm.alias = value,
                 validator: checkEmpty),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -140,15 +143,15 @@ class _SignUpStepTwoForm extends StatelessWidget {
                     color: Colors.blueGrey,
                     child: Container(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                        child: Text(
+                            const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        child: const Text(
                           'Atras',
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         )),
                     onPressed: () {
                       Navigator.pop(context);
                     }),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 MaterialButton(
@@ -159,10 +162,10 @@ class _SignUpStepTwoForm extends StatelessWidget {
                     color: Colors.redAccent,
                     child: Container(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                            const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         child: Text(
                           signUpForm.isLoading ? 'Espere' : 'Siguiente',
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         )),
                     onPressed: () async {
                       if (!signUpForm.isValidStepTwoForm()) return;

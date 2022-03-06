@@ -20,7 +20,6 @@ class DrawerMenu extends StatelessWidget {
 
 Widget _buildHeader(BuildContext context) {
   final authService = Provider.of<AuthService>(context);
-
   return DrawerHeader(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: UserAccountsDrawerHeader(
@@ -31,9 +30,9 @@ Widget _buildHeader(BuildContext context) {
                 backgroundImage: authService.userLogged.avatar != ''
                     ? FadeInImage.assetNetwork(
                             placeholder: 'assets/jar-loading.gif',
-                            image: '${authService.userLogged.avatar}')
+                            image: authService.userLogged.avatar)
                         .image
-                    : AssetImage('assets/no-image.png'))),
+                    : const AssetImage('assets/no-image.png'))),
         accountName: Text(
             "${authService.userLogged.name} ${authService.userLogged.lastname} | ${authService.userLogged.alias}"),
         accountEmail: Text(

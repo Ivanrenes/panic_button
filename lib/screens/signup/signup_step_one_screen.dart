@@ -21,32 +21,32 @@ class SignUpStepOneScreen extends StatelessWidget {
             child: SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 250),
+          const SizedBox(height: 250),
           CardContainer(
               child: Column(
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text('Crear cuenta',
                   style: Theme.of(context).textTheme.headline4),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: _SignUpStepOneForm(),
               )
             ],
           )),
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           TextButton(
               onPressed: () => Navigator.pop(context),
               style: ButtonStyle(
                   overlayColor:
                       MaterialStateProperty.all(Colors.indigo.withOpacity(0.1)),
-                  shape: MaterialStateProperty.all(StadiumBorder())),
-              child: Text(
+                  shape: MaterialStateProperty.all(const StadiumBorder())),
+              child: const Text(
                 '¿Ya tienes una cuenta?',
                 style: TextStyle(fontSize: 18, color: Colors.black87),
               )),
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
         ],
       ),
     )));
@@ -76,7 +76,7 @@ class _SignUpStepOneForm extends StatelessWidget {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               pickerDialogStyle: PickerDialogStyle(
                   searchFieldInputDecoration:
-                      InputDecoration(label: Text("Buscar país"))),
+                      const InputDecoration(label: const Text("Buscar país"))),
               onChanged: (phone) {
                 signUpForm.phone = '${phone.countryCode}${phone.number}';
               },
@@ -93,7 +93,7 @@ class _SignUpStepOneForm extends StatelessWidget {
               validator: checkEmpty,
               autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextFormField(
               autocorrect: false,
               keyboardType: TextInputType.emailAddress,
@@ -105,7 +105,7 @@ class _SignUpStepOneForm extends StatelessWidget {
               validator: checkEmpty,
               autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             MaterialButton(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
@@ -113,10 +113,10 @@ class _SignUpStepOneForm extends StatelessWidget {
                 elevation: 0,
                 color: Colors.redAccent,
                 child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                     child: Text(
                       signUpForm.isLoading ? 'Espere' : 'Siguiente',
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     )),
                 onPressed: !signUpForm.isLoading
                     ? () async {
