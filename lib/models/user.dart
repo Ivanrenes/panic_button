@@ -39,7 +39,7 @@ class User {
   String name;
   String lastname;
   Map<String, dynamic> location;
-  String? zipCode;
+  int? zipCode;
 
   User copyWith({
     String? user_uid,
@@ -55,7 +55,7 @@ class User {
     required String name,
     required String lastname,
     required Map<String, dynamic> location,
-    String? zipCode,
+    int? zipCode,
   }) =>
       User(
         user_uid: user_uid ?? this.user_uid,

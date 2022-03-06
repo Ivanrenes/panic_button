@@ -10,7 +10,8 @@ class DrawerMenu extends StatelessWidget {
     return Drawer(
       child: SingleChildScrollView(
           child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [_buildHeader(context), _buildMenuItems(context)],
       )),
     );
@@ -20,22 +21,24 @@ class DrawerMenu extends StatelessWidget {
 Widget _buildHeader(BuildContext context) {
   final authService = Provider.of<AuthService>(context);
 
-  return SafeArea(
-    child: DrawerHeader(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: UserAccountsDrawerHeader(
-          decoration: BoxDecoration(color: Colors.red[400]),
-          currentAccountPicture: ClipOval(
-              child: CircleAvatar(
-                  backgroundImage: Image.network(
-                          '${authService.userLogged.avatar}',
-                          fit: BoxFit.cover)
-                      .image)),
-          accountName: Text(
-              "${authService.userLogged.name} ${authService.userLogged.lastname} "),
-          accountEmail: Text('${authService.userLogged.email}'),
-        )),
-  );
+  return DrawerHeader(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: UserAccountsDrawerHeader(
+        decoration: BoxDecoration(color: Colors.red[400]),
+        currentAccountPicture: ClipOval(
+            child: CircleAvatar(
+                backgroundColor: Colors.blueGrey,
+                backgroundImage: authService.userLogged.avatar != ''
+                    ? FadeInImage.assetNetwork(
+                            placeholder: 'assets/jar-loading.gif',
+                            image: '${authService.userLogged.avatar}')
+                        .image
+                    : AssetImage('assets/no-image.png'))),
+        accountName: Text(
+            "${authService.userLogged.name} ${authService.userLogged.lastname} | ${authService.userLogged.alias}"),
+        accountEmail: Text(
+            '${authService.userLogged.email} | ${authService.userLogged.phone}'),
+      ));
 }
 
 Widget _buildMenuItems(BuildContext context) {
@@ -50,12 +53,14 @@ Widget _buildMenuItems(BuildContext context) {
       ),
       ListTile(
         leading: const Icon(Icons.person_pin_rounded),
-        title: const Text("Profile"),
-        onTap: () {},
+        title: const Text("Perfil"),
+        onTap: () {
+          Navigator.pushNamed(context, 'edit_user_profile');
+        },
       ),
       ListTile(
         leading: const Icon(Icons.logout),
-        title: const Text("Logout"),
+        title: const Text("Cerrar Sesión"),
         onTap: () async {
           await authService.logout();
           Navigator.pushNamedAndRemoveUntil(

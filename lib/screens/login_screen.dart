@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import 'package:panic_button_app/ui/input_decorations.dart';
 import 'package:panic_button_app/widgets/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../blocs/gps/gps_bloc.dart';
 

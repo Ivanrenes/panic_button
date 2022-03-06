@@ -42,10 +42,11 @@ dependencies:
   shared_preferences: ^2.0.0
   geocoding: ^2.0.2
   firebase_messaging: ^11.2.8
-  awesome_notifications: ^0.0.6+10
+  awesome_notifications: 0.0.6+10
   image_picker: ^0.8.4+10
   uuid: ^3.0.6
   firebase_storage: ^10.2.9
+  file_picker: ^4.3.1
 
 
 dev_dependencies:

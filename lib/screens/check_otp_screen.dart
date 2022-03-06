@@ -19,6 +19,8 @@ class CheckOtpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = ModalRoute.of(context)!.settings.arguments;
+
     return Scaffold(
       body: AuthBackground(
           child: SingleChildScrollView(
@@ -39,7 +41,12 @@ class CheckOtpScreen extends StatelessWidget {
             )),
             SizedBox(height: 50),
             TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => {
+                      if (user != null)
+                        {Navigator.popAndPushNamed(context, 'login')}
+                      else
+                        {Navigator.popAndPushNamed(context, 'signup_step_two')}
+                    },
                 style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(
                         Colors.redAccent.withOpacity(0.1)),
@@ -64,38 +71,35 @@ class _OtpVerificationForm extends StatelessWidget {
     final authService = Provider.of<AuthService>(context, listen: false);
     final user = ModalRoute.of(context)!.settings.arguments;
 
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: OtpTextField(
-        numberOfFields: 6,
-        borderColor: Color(0xFF512DA8),
-        //set to true to show as box or false to show as dash
-        showFieldAsBox: true,
-        //runs when a code is typed in
-        onCodeChanged: (String code) {
-          //handle validation or checks here
-        },
-        //runs when every textfield is filled
-        onSubmit: (String verificationCode) async {
-          if (user != null) {
-            await authService.verifyOtp(verificationCode, user);
-          } else {
-            await authService.verifyOtp(verificationCode, null);
-          }
+    return OtpTextField(
+      numberOfFields: 6,
+      borderColor: Color(0xFF512DA8),
+      //set to true to show as box or false to show as dash
+      showFieldAsBox: true,
+      //runs when a code is typed in
+      onCodeChanged: (String code) {
+        //handle validation or checks here
+      },
+      //runs when every textfield is filled
+      onSubmit: (String verificationCode) async {
+        if (user != null) {
+          await authService.verifyOtp(verificationCode, user);
+        } else {
+          await authService.verifyOtp(verificationCode, null);
+        }
 
-          authService.isValidOTP
-              ? authService.isLogging
-                  ? Navigator.pushNamed(context, 'home')
-                  : Navigator.pushNamed(context, 'signup_step_three')
-              : CoolAlert.show(
-                  context: context,
-                  type: CoolAlertType.error,
-                  title: 'Oops...',
-                  text:
-                      "No pudimos validar tu codigo, por favor intenta nuevamente",
-                  loopAnimation: false);
-        }, // end onSubmit
-      ),
+        authService.isValidOTP
+            ? authService.isLogging
+                ? Navigator.pushNamed(context, 'home')
+                : Navigator.pushNamed(context, 'signup_step_three')
+            : CoolAlert.show(
+                context: context,
+                type: CoolAlertType.error,
+                title: 'Oops...',
+                text:
+                    "No pudimos validar tu codigo, por favor intenta nuevamente",
+                loopAnimation: false);
+      }, // end onSubmit
     );
   }
 }

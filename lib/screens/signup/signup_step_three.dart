@@ -81,7 +81,8 @@ class _SignUpStepThreeFormState extends State<_SignUpStepThreeForm> {
     final ImagePicker _picker = ImagePicker();
 
     void _openGallery(BuildContext context) async {
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile =
+          await _picker.pickImage(source: ImageSource.gallery);
       setState(() {
         imageFile = pickedFile!;
       });
@@ -186,7 +187,7 @@ class _SignUpStepThreeFormState extends State<_SignUpStepThreeForm> {
                     color: Colors.redAccent,
                     child: Container(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                            EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                         child: Text(
                           signUpForm.isLoading ? 'Espere' : 'Subir foto',
                           style: TextStyle(color: Colors.white),

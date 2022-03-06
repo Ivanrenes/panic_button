@@ -1,9 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:panic_button_app/models/panic.dart';
 import 'package:panic_button_app/widgets/custom_appbar.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
 
+  @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  final Stream<QuerySnapshot> _notificationsStream = FirebaseFirestore.instance
+      .collection('panics')
+      .orderBy('created')
+      .snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,16 +23,50 @@ class NotificationScreen extends StatelessWidget {
           iconTitle: Icon(Icons.notifications),
           actions: [IconButton(onPressed: () {}, icon: Icon(Icons.refresh))],
         ),
-        body: ListView(
-          children: List<int>.from([1, 2, 3, 4, 5])
-              .map((e) => NotificationCard())
-              .toList(),
-        ));
+        body: StreamBuilder<QuerySnapshot>(
+            stream: _notificationsStream,
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text(
+                    'Algo no fue como lo esperabamos :(, por favor reporta con el administrador del sistema');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.redAccent,
+                  ),
+                );
+              }
+
+              return ListView(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+
+                  Panic panic = Panic(
+                      title: data["title"] ?? '',
+                      body: data["body"] ?? '',
+                      myLocation: data["myLocation"] ?? {},
+                      name: data["name"] ?? '',
+                      phone: data["phone"] ?? '',
+                      alias: data["alias"]);
+
+                  return NotificationCard(
+                      title: panic.title,
+                      description: panic.body,
+                      alias: panic.alias,
+                      name: panic.name);
+                }).toList(),
+              );
+            }));
   }
 }
 
-Widget NotificationCard() {
-  return Padding(
+Widget NotificationCard(
+    {required title, required description, required name, required alias}) {
+  return Container(
     padding: EdgeInsets.all(10),
     child: Container(
       width: double.infinity,
@@ -41,22 +86,47 @@ Widget NotificationCard() {
           SizedBox(
             width: 10,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                "Titulo de la notificación",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-              Text(
-                "Cuerpo de la notificación",
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-            ],
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 150),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 2,
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                Text(
+                  description,
+                  maxLines: 2,
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                Text(
+                  "Persona: $name",
+                  maxLines: 2,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                Text(
+                  "Empresa: $alias",
+                  maxLines: 2,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                      overflow: TextOverflow.ellipsis),
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -8,8 +8,8 @@ abstract class LocationEvent extends Equatable {
 }
 
 class OnNewUserLocationEvent extends LocationEvent {
-  final LatLng newLocation;
   const OnNewUserLocationEvent(this.newLocation);
+  final LatLng newLocation;
 }
 
 class OnStartFollowingUser extends LocationEvent {}

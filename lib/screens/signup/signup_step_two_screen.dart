@@ -185,7 +185,7 @@ class _SignUpStepTwoForm extends StatelessWidget {
                           email: signUpForm.email,
                           name: signUpForm.name,
                           lastname: signUpForm.lastName,
-                          zipCode: signUpForm.zipCode,
+                          zipCode: int.tryParse(signUpForm.zipCode),
                           location: signUpForm.location);
 
                       await authService.signUp(user);

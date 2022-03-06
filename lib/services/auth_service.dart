@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:panic_button_app/models/user.dart' as pb;
 import 'package:panic_button_app/services/push_notifications_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -55,6 +56,10 @@ class AuthService extends ChangeNotifier {
     notifyListeners();
   }
 
+  set userLoggedUnNotified(pb.User userLogged) {
+    _userLogged = userLogged;
+  }
+
   bool get isValidatingOTP => _isValidatingOTP;
 
   set isValidatingOTP(bool isValidatingOTP) {
@@ -95,6 +100,7 @@ class AuthService extends ChangeNotifier {
   bool get isValidOTP => _isValidOTP;
 
   Future verifyOtp(otpCode, userData) async {
+    final _prefs = await SharedPreferences.getInstance();
     try {
       await _auth
           .signInWithCredential(PhoneAuthProvider.credential(
@@ -125,6 +131,8 @@ class AuthService extends ChangeNotifier {
                             .get()
                             .then((value) => {
                                   userLogged = pb.User.fromJson(value.data()!),
+                                  _prefs.setString("userLogged",
+                                      json.encode(userLogged.toJson())),
                                   isValidOTP = true,
                                   isLogging = true
                                 })
@@ -269,5 +277,24 @@ class AuthService extends ChangeNotifier {
         isRegistered = false;
       }
     });
+  }
+
+  Future<bool> updateUser(email, alias, address, name, lastname) async {
+    bool success = false;
+    await _firestore
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .update({
+          "email": email,
+          "alias": alias,
+          "address": address,
+          "name": name,
+          "lastname": lastname,
+        })
+        .then((value) => {success = true})
+        .catchError((onError) {
+          success = false;
+        });
+    return success;
   }
 }
