@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl_phone_field/country_picker_dialog.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:panic_button_app/helpers/validators.dart';
-import 'package:panic_button_app/models/user.dart';
+import 'package:panic_button_app/constants/texts.dart';
 import 'package:panic_button_app/providers/signup_form_provider.dart';
-import 'package:panic_button_app/services/push_notifications_service.dart';
 import 'package:provider/provider.dart';
 
-import 'dart:io' show File, Platform;
+import 'dart:io' show File;
 
-import 'package:panic_button_app/providers/login_form_provider.dart';
 import 'package:panic_button_app/services/services.dart';
 
-import 'package:panic_button_app/ui/input_decorations.dart';
 import 'package:panic_button_app/widgets/widgets.dart';
 
 class SignUpStepThreeScreen extends StatelessWidget {
-  ScrollController _scrollController = new ScrollController(
+  final ScrollController _scrollController = ScrollController(
     initialScrollOffset: 120,
     keepScrollOffset: true,
   );
+
+  SignUpStepThreeScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,10 +31,10 @@ class SignUpStepThreeScreen extends StatelessWidget {
                 child: Column(
               children: [
                 const SizedBox(height: 10),
-                Text('¡Registro Completado!',
+                Text(TextConstants.completeRegister,
                     style: Theme.of(context).textTheme.headline5),
                 const SizedBox(height: 5),
-                Text('¿Desea agregar una foto de perfil?',
+                Text(TextConstants.addProfileImage,
                     style: Theme.of(context).textTheme.headline6),
                 const SizedBox(height: 5),
                 Padding(
@@ -55,9 +51,9 @@ class SignUpStepThreeScreen extends StatelessWidget {
                     overlayColor: MaterialStateProperty.all(
                         Colors.indigo.withOpacity(0.1)),
                     shape: MaterialStateProperty.all(const StadiumBorder())),
-                child: const Text(
-                  '¿Ya tienes una cuenta?',
-                  style: TextStyle(fontSize: 18, color: Colors.black87),
+                child: Text(
+                  TextConstants.readyAccount,
+                  style: const TextStyle(fontSize: 18, color: Colors.black87),
                 )),
             const SizedBox(height: 50),
           ],
@@ -105,9 +101,9 @@ class _SignUpStepThreeFormState extends State<_SignUpStepThreeForm> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text(
-                "Elige una opción",
-                style: TextStyle(color: Colors.blue),
+              title: Text(
+                TextConstants.selectOption,
+                style: const TextStyle(color: Colors.blue),
               ),
               content: SingleChildScrollView(
                 child: ListBody(
@@ -120,7 +116,7 @@ class _SignUpStepThreeFormState extends State<_SignUpStepThreeForm> {
                       onTap: () {
                         _openGallery(context);
                       },
-                      title: const Text("Gallery"),
+                      title: Text(TextConstants.gallery),
                       leading: const Icon(
                         Icons.account_box,
                         color: Colors.blue,
@@ -134,7 +130,7 @@ class _SignUpStepThreeFormState extends State<_SignUpStepThreeForm> {
                       onTap: () {
                         _openCamera(context);
                       },
-                      title: const Text("Camera"),
+                      title: Text(TextConstants.camera),
                       leading: const Icon(
                         Icons.camera,
                         color: Colors.blue,
@@ -147,67 +143,65 @@ class _SignUpStepThreeFormState extends State<_SignUpStepThreeForm> {
           });
     }
 
-    return Container(
-      child: Form(
-        key: signUpForm.formKeyThree,
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            MaterialButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                disabledColor: Colors.grey,
-                elevation: 0,
-                color: Colors.green,
-                child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    child: Text(
-                      signUpForm.isLoading ? 'Espere' : 'Seleccionar',
-                      style: const TextStyle(color: Colors.white),
-                    )),
-                onPressed: () async {
-                  await _showChoiceDialog(context);
-                }),
-            TextButton(
-              child: const Text("Saltar por ahora",
-                  style: TextStyle(color: Colors.grey)),
-              onPressed: () {
-                Navigator.popAndPushNamed(context, 'home');
-              },
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MaterialButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    disabledColor: Colors.grey,
-                    elevation: 0,
-                    color: Colors.redAccent,
-                    child: Container(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-                        child: Text(
-                          signUpForm.isLoading ? 'Espere' : 'Subir foto',
-                          style: const TextStyle(color: Colors.white),
-                        )),
-                    onPressed: !signUpForm.isLoading
-                        ? () async {
-                            signUpForm.isLoading = true;
-                            await authService.uploadImageToFirebase(
-                                context, File(imageFile!.path));
-                            await authService.updateProfilePicture(authService.imagePath);
-                            signUpForm.isLoading = false;
-                            authService.userLogged.avatar =
-                                authService.imagePath;
-                            Navigator.popAndPushNamed(context, 'home');
-                          }
-                        : null)
-              ],
-            )
-          ],
-        ),
+    return Form(
+      key: signUpForm.formKeyThree,
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          MaterialButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              disabledColor: Colors.grey,
+              elevation: 0,
+              color: Colors.green,
+              child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Text(
+                    signUpForm.isLoading ? TextConstants.await : TextConstants.select,
+                    style: const TextStyle(color: Colors.white),
+                  )),
+              onPressed: () async {
+                await _showChoiceDialog(context);
+              }),
+          TextButton(
+            child: Text(TextConstants.skipForNow,
+                style: const TextStyle(color: Colors.grey)),
+            onPressed: () {
+              Navigator.popAndPushNamed(context, 'home');
+            },
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  disabledColor: Colors.grey,
+                  elevation: 0,
+                  color: const Color.fromARGB(255, 177, 19, 16),
+                  child: Container(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      child: Text(
+                        signUpForm.isLoading ? TextConstants.await : TextConstants.uploadPhoto,
+                        style: const TextStyle(color: Colors.white),
+                      )),
+                  onPressed: !signUpForm.isLoading
+                      ? () async {
+                          signUpForm.isLoading = true;
+                          await authService.uploadImageToFirebase(
+                              context, File(imageFile!.path));
+                          await authService.updateProfilePicture(authService.imagePath);
+                          signUpForm.isLoading = false;
+                          authService.userLogged.avatar =
+                              authService.imagePath;
+                          Navigator.popAndPushNamed(context, 'home');
+                        }
+                      : null)
+            ],
+          )
+        ],
       ),
     );
   }

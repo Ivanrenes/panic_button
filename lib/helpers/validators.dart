@@ -1,8 +1,10 @@
+import 'package:panic_button_app/constants/texts.dart';
+
 String? checkEmpty(value) {
   if (value != null && value.length > 0) {
     return null;
   }
-  return 'Este campo no puede quedar vacio';
+  return TextConstants.canNotBeEmpty;
 }
 
 String? isValidEmail(value) {
@@ -10,5 +12,5 @@ String? isValidEmail(value) {
               r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
           .hasMatch(value)
       ? null
-      : 'Email is not valid';
+      : TextConstants.invalidEmail;
 }

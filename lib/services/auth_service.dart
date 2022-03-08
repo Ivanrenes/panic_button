@@ -1,14 +1,11 @@
 import 'dart:convert';
 import 'dart:io' show File, Platform;
-import 'package:intl_phone_field/phone_number.dart';
 import 'package:path/path.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:panic_button_app/models/user.dart' as pb;
 import 'package:panic_button_app/services/push_notifications_service.dart';
@@ -188,12 +185,10 @@ class AuthService extends ChangeNotifier {
         .where('phone', isEqualTo: phoneNumber)
         .get()
         .then((result) {
-      print('PHONE ${result}');
-
-      if (result.docs.length > 0) {
-        isValidUser = true;
-      }
-    });
+          if (result.docs.length > 0) {
+            isValidUser = true;
+          }
+        });
 
     if (isValidUser) {
       //ok, we have a valid user, now lets do otp verification
@@ -212,7 +207,7 @@ class AuthService extends ChangeNotifier {
         codeAutoRetrievalTimeout: (String verificationId) {
           verificationCode = verificationId;
         },
-        timeout: Duration(seconds: 60),
+        timeout: const Duration(seconds: 60),
       );
       await verifyPhoneNumber;
     } else {
@@ -237,14 +232,14 @@ class AuthService extends ChangeNotifier {
       codeAutoRetrievalTimeout: (String verificationId) {
         verificationCode = verificationId;
       },
-      timeout: Duration(seconds: 60),
+      timeout: const Duration(seconds: 60),
     );
     await verifyPhoneNumber;
   }
 
   Future<void> logout() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    await _prefs.setString('userLogged', '');
+    await _prefs.setBool('userLogged', false);
     await _auth.signOut();
   }
 

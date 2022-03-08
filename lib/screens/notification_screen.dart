@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:panic_button_app/constants/texts.dart';
 import 'package:panic_button_app/models/panic.dart';
 import 'package:panic_button_app/widgets/custom_appbar.dart';
 
@@ -19,23 +20,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(
-          title: Text('NOTIFICACIONES'),
-          iconTitle: Icon(Icons.notifications),
-          actions: [IconButton(onPressed: () {}, icon: Icon(Icons.refresh))],
+          title: Text(TextConstants.notifications),
+          iconTitle: const Icon(Icons.notifications),
+          actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.refresh))],
         ),
         body: StreamBuilder<QuerySnapshot>(
             stream: _notificationsStream,
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
-                return Text(
-                    'Algo no fue como lo esperabamos :(, por favor reporta con el administrador del sistema');
+                return Text(TextConstants.genericError);
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(
-                    color: Colors.redAccent,
+                    color: Color.fromARGB(255, 177, 19, 16),
                   ),
                 );
               }
@@ -51,9 +51,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       myLocation: data["myLocation"] ?? {},
                       name: data["name"] ?? '',
                       phone: data["phone"] ?? '',
-                      alias: data["alias"]);
+                      alias: data["alias"],
+                      countryCode: data["countryCode"]);
 
-                  return NotificationCard(
+                  return notificationCard(
                       title: panic.title,
                       description: panic.body,
                       alias: panic.alias,
@@ -64,30 +65,30 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 }
 
-Widget NotificationCard(
+Widget notificationCard(
     {required title, required description, required name, required alias}) {
   return Container(
-    padding: EdgeInsets.all(10),
+    padding: const EdgeInsets.all(10),
     child: Container(
       width: double.infinity,
       height: 150,
       decoration: BoxDecoration(
-          color: Colors.redAccent, borderRadius: BorderRadius.circular(20)),
+          color: const Color.fromARGB(255, 177, 19, 16), borderRadius: BorderRadius.circular(20)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Image.asset(
             "assets/55-error-outline.gif",
             height: 100,
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 150),
+            constraints: const BoxConstraints(maxWidth: 150),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +96,7 @@ Widget NotificationCard(
                 Text(
                   title,
                   maxLines: 2,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -104,23 +105,23 @@ Widget NotificationCard(
                 Text(
                   description,
                   maxLines: 2,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 15,
                       color: Colors.white,
                       overflow: TextOverflow.ellipsis),
                 ),
                 Text(
-                  "Persona: $name",
+                  "${TextConstants.person}: $name",
                   maxLines: 2,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 12,
                       color: Colors.white,
                       overflow: TextOverflow.ellipsis),
                 ),
                 Text(
-                  "Empresa: $alias",
+                  "${TextConstants.company}: $alias",
                   maxLines: 2,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 12,
                       color: Colors.white,
                       overflow: TextOverflow.ellipsis),

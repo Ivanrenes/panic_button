@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:panic_button_app/constants/texts.dart';
 import 'package:panic_button_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ Widget _buildHeader(BuildContext context) {
   return DrawerHeader(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: UserAccountsDrawerHeader(
-        decoration: BoxDecoration(color: Colors.red[400]),
+        decoration: const BoxDecoration(color: Color.fromARGB(255, 136, 7, 4)),
         currentAccountPicture: ClipOval(
             child: CircleAvatar(
                 backgroundColor: Colors.blueGrey,
@@ -45,21 +46,21 @@ Widget _buildMenuItems(BuildContext context) {
 
   return Column(
     children: [
-      ListTile(
-        leading: const Icon(Icons.home),
-        title: const Text("Home"),
-        onTap: () {},
-      ),
+      // ListTile(
+      //   leading: const Icon(Icons.home),
+      //   title: Text(TextConstants.home),
+      //   onTap: () {},
+      // ),
       ListTile(
         leading: const Icon(Icons.person_pin_rounded),
-        title: const Text("Perfil"),
+        title: Text(TextConstants.profile),
         onTap: () {
           Navigator.pushNamed(context, 'edit_user_profile');
         },
       ),
       ListTile(
         leading: const Icon(Icons.logout),
-        title: const Text("Cerrar Sesión"),
+        title: Text(TextConstants.logout),
         onTap: () async {
           await authService.logout();
           Navigator.pushNamedAndRemoveUntil(

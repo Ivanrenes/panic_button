@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:panic_button_app/constants/texts.dart';
 import 'package:panic_button_app/helpers/validators.dart';
 import 'package:panic_button_app/providers/users/edit_user_form_provider.dart';
 import 'package:panic_button_app/services/auth_service.dart';
@@ -21,7 +22,7 @@ class EditUserProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: const Text('Editar Perfil'),
+        title: Text(TextConstants.editProfile),
         iconTitle: const Icon(Icons.person),
         actions: [
           SizedBox(
@@ -36,7 +37,7 @@ class EditUserProfileScreen extends StatelessWidget {
               userLogged.email,
               userLogged.address,
               userLogged.alias),
-          child: _EditUserForm()),
+          child: const _EditUserForm()),
     );
   }
 }
@@ -48,6 +49,7 @@ class _EditUserForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final editUserFormProvider = Provider.of<EditUserFormProvider>(context);
     final authService = Provider.of<AuthService>(context);
 
@@ -55,7 +57,7 @@ class _EditUserForm extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: SizedBox(
-          height: 450,
+          height: size.height -370,
           width: double.infinity,
           child: CardContainer(
             child: Form(
@@ -67,8 +69,8 @@ class _EditUserForm extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                     initialValue: editUserFormProvider.name,
                     decoration: InputDecorations.authInputDecoration(
-                        hintText: 'John',
-                        labelText: 'Nombres',
+                        hintText: TextConstants.john,
+                        labelText: TextConstants.names,
                         prefixIcon: Icons.person),
                     onChanged: (value) {
                       editUserFormProvider.name = value;
@@ -76,14 +78,14 @@ class _EditUserForm extends StatelessWidget {
                     validator: checkEmpty,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextFormField(
                     autocorrect: false,
                     keyboardType: TextInputType.emailAddress,
                     initialValue: editUserFormProvider.lastName,
                     decoration: InputDecorations.authInputDecoration(
-                        hintText: 'Doe',
-                        labelText: 'Apellidos',
+                        hintText: TextConstants.doe,
+                        labelText: TextConstants.lastnames,
                         prefixIcon: Icons.person),
                     onChanged: (value) {
                       editUserFormProvider.lastName = value;
@@ -91,14 +93,14 @@ class _EditUserForm extends StatelessWidget {
                     validator: checkEmpty,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextFormField(
                     autocorrect: false,
                     keyboardType: TextInputType.emailAddress,
                     initialValue: editUserFormProvider.alias,
                     decoration: InputDecorations.authInputDecoration(
-                        hintText: 'Mi Vaquita S.A',
-                        labelText: 'Nombre del establecimiento',
+                        hintText: TextConstants.myBusiness,
+                        labelText: TextConstants.nameBusiness,
                         prefixIcon: Icons.business_outlined),
                     onChanged: (value) {
                       editUserFormProvider.alias = value;
@@ -106,14 +108,14 @@ class _EditUserForm extends StatelessWidget {
                     validator: checkEmpty,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextFormField(
                     autocorrect: false,
                     keyboardType: TextInputType.emailAddress,
                     initialValue: editUserFormProvider.address,
                     decoration: InputDecorations.authInputDecoration(
-                        hintText: 'CL 45D N 4 32',
-                        labelText: 'Dirección',
+                        hintText: TextConstants.testAddress,
+                        labelText: TextConstants.address,
                         prefixIcon: Icons.home),
                     onChanged: (value) {
                       editUserFormProvider.address = value;
@@ -121,14 +123,14 @@ class _EditUserForm extends StatelessWidget {
                     validator: checkEmpty,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextFormField(
                     autocorrect: false,
                     keyboardType: TextInputType.emailAddress,
                     initialValue: editUserFormProvider.email,
                     decoration: InputDecorations.authInputDecoration(
-                        hintText: 'john.doe@email.com',
-                        labelText: 'Correo Electronico',
+                        hintText: TextConstants.testEmail,
+                        labelText: TextConstants.email,
                         prefixIcon: Icons.email),
                     onChanged: (value) {
                       editUserFormProvider.email = value;
@@ -136,21 +138,22 @@ class _EditUserForm extends StatelessWidget {
                     validator: isValidEmail,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  SizedBox(
-                    height: 20,
+                  const SizedBox(
+                    height: 25,
                   ),
                   MaterialButton(
+                    
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       disabledColor: Colors.grey,
                       elevation: 0,
-                      color: Colors.redAccent,
+                      color: const Color.fromARGB(255, 177, 19, 16),
                       child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 15),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 15),
                           child: Text(
-                            'Guardar Cambios',
-                            style: TextStyle(color: Colors.white),
+                            TextConstants.saveChanges,
+                            style: const TextStyle(color: Colors.white),
                           )),
                       onPressed: !editUserFormProvider.isLoading
                           ? () async {
@@ -184,16 +187,16 @@ class _EditUserForm extends StatelessWidget {
                                       CoolAlert.show(
                                           context: context,
                                           type: CoolAlertType.success,
-                                          title: '¡Felicidades!',
+                                          title: TextConstants.congratulations,
                                           text:
-                                              "Tu perfil ha sido modificado exitosamente",
+                                              TextConstants.profileSuccessfullyModified,
                                           loopAnimation: false)
                                     }
                                   : CoolAlert.show(
                                       context: context,
                                       type: CoolAlertType.error,
-                                      title: '¡Lo sentimos!',
-                                      text: "Húbo un error al intentar guardar",
+                                      title: TextConstants.alertTitleError,
+                                      text: TextConstants.saveError,
                                       loopAnimation: false);
 
                               editUserFormProvider.isLoading = false;

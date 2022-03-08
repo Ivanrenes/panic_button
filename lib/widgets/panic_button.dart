@@ -33,7 +33,7 @@ class PanicButton extends StatelessWidget {
           boxShadow: [
             BoxShadow(
                 color: color!,
-                offset: Offset(.5, .5),
+                offset: const Offset(.5, .5),
                 spreadRadius: 1,
                 blurRadius: 8.0)
           ],

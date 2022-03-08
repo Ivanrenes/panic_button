@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:panic_button_app/constants/texts.dart';
 
 class PushNotificationService {
   static FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -10,29 +11,23 @@ class PushNotificationService {
       _messageStream.stream;
 
   static Future _backgroundHandler(RemoteMessage message) async {
-    // print( 'onBackground Handler ${ message.messageId }');
-    print(message.data);
     _messageStream.add({
-      "title": message.notification?.title ?? 'No title',
-      "body": message.notification?.body ?? 'No body'
+      "title": message.notification?.title ?? TextConstants.noTitle,
+      "body": message.notification?.body ?? TextConstants.noBody
     });
   }
 
   static Future _onMessageHandler(RemoteMessage message) async {
-    // print( 'onMessage Handler ${ message.messageId }');
-    print(message.data);
     _messageStream.add({
-      "title": message.notification?.title ?? 'No title',
-      "body": message.notification?.body ?? 'No body'
+      "title": message.notification?.title ?? TextConstants.noTitle,
+      "body": message.notification?.body ?? TextConstants.noBody
     });
   }
 
   static Future _onMessageOpenApp(RemoteMessage message) async {
-    // print( 'onMessageOpenApp Handler ${ message.messageId }');
-    print(message.data);
     _messageStream.add({
-      "title": message.notification?.title ?? 'No title',
-      "body": message.notification?.body ?? 'No body'
+      "title": message.notification?.title ?? TextConstants.noTitle,
+      "body": message.notification?.body ?? TextConstants.noBody
     });
   }
 
@@ -41,8 +36,6 @@ class PushNotificationService {
     await requestPermission();
 
     token = await FirebaseMessaging.instance.getToken();
-
-    print(token);
 
     // Handlers
     FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
@@ -63,11 +56,8 @@ class PushNotificationService {
         provisional: false,
         sound: true);
     if(settings.authorizationStatus == AuthorizationStatus.authorized){
-      print('Usser garanted Permission');
     } else if(settings.authorizationStatus == AuthorizationStatus.provisional){
-      print('User granted provisional permission');
     } else {
-      print('User declided or has not accepted permission');
     }
     //for forerground
     await messaging.setForegroundNotificationPresentationOptions(

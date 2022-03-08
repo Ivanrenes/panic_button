@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:panic_button_app/models/models.dart';
 
 class Product {
     Product({
@@ -40,11 +39,11 @@ class Product {
     };
 
     Product copy() => Product(
-      available: this.available,
-      name: this.name,
-      picture: this.picture,
-      price: this.price,
-      id: this.id,
+      available: available,
+      name: name,
+      picture: picture,
+      price: price,
+      id: id,
     );
 
 }

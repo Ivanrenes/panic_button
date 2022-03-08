@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:panic_button_app/blocs/blocs.dart';
+import 'package:panic_button_app/constants/texts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GpsPermissionsPage extends StatelessWidget {
@@ -14,7 +15,7 @@ class GpsPermissionsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           height: double.infinity,
           child: Container(
@@ -31,17 +32,17 @@ class GpsPermissionsPage extends StatelessWidget {
                   child: const Image(image: AssetImage("assets/location.png")),
                   height: 240,
                 ),
-                const Text(
-                  'Activa tu ubicación',
-                  style: TextStyle(color: Colors.black, fontSize: 25),
+                Text(
+                  TextConstants.gpstitle,
+                  style: const TextStyle(color: Colors.black, fontSize: 25),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: const Text(
-                    'Panic Button necesita permiso para tú ubicación para brindarte sus servicios',
+                  child: Text(
+                    TextConstants.gpsMessage,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.black, fontSize: 14, height: 1.5),
                     textAlign: TextAlign.center,
                   ),
@@ -69,14 +70,13 @@ class GpsPermissionsPage extends StatelessWidget {
 class _EnableGPS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final gpsBloc = BlocProvider.of<GpsBloc>(context);
     return GestureDetector(
         onTap: () {
           CoolAlert.show(
             context: context,
             type: CoolAlertType.error,
-            title: 'Oops...',
-            text: "Por favor habilite el gps para poder usar la app",
+            title: TextConstants.ops,
+            text: TextConstants.enableGpsMessage,
             loopAnimation: false,
           );
         },
@@ -86,9 +86,9 @@ class _EnableGPS extends StatelessWidget {
                 color: Colors.orangeAccent),
             width: 200,
             height: 50,
-            child: const Center(
-                child: Text('Habilitar GPS',
-                    style: TextStyle(
+            child: Center(
+                child: Text(TextConstants.enabeGpsTitle,
+                    style: const TextStyle(
                         fontSize: 15, fontWeight: FontWeight.bold)))));
   }
 }
@@ -111,12 +111,12 @@ class _Location extends StatelessWidget {
         child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.redAccent),
+                color: const Color.fromARGB(255, 177, 19, 16)),
             width: 200,
             height: 50,
-            child: const Center(
-                child: Text('Usar mi ubicación',
-                    style: TextStyle(
+            child: Center(
+                child: Text(TextConstants.useMyLocation,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 15,
                         fontWeight: FontWeight.bold)))));

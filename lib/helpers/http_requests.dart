@@ -2,7 +2,7 @@ import 'package:panic_button_app/constants/api.dart';
 import 'package:http/http.dart' as http;
 
 class HttpService {
-  String api = ApiConstants.API_URI;
+  String api = ApiConstants.apiUri;
 
   Future<http.Response> post({
     required String endpoint,

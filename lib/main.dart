@@ -3,9 +3,9 @@ import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:panic_button_app/blocs/location/location_bloc.dart';
+import 'package:panic_button_app/constants/texts.dart';
 import 'package:panic_button_app/models/user.dart';
 import 'package:panic_button_app/providers/signup_form_provider.dart';
 import 'package:panic_button_app/screens/notification_screen.dart';
@@ -15,7 +15,6 @@ import 'package:panic_button_app/screens/users/edit_user_profile_screen.dart';
 import 'package:panic_button_app/services/push_notifications_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 import 'firebase_options.dart';
 
@@ -41,7 +40,7 @@ void main() async {
       NotificationChannel(
         channelKey: 'basic_channel',
         channelName: 'Basic Notifications',
-        defaultColor: Colors.redAccent,
+        defaultColor: const Color.fromARGB(255, 177, 19, 16),
         importance: NotificationImportance.High,
         channelShowBadge: true,
       ),
@@ -83,17 +82,16 @@ class _AppStateState extends State<AppState> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Habilita las notificaciones'),
-              content: const Text(
-                  'Nuestra App funcióna gracias a la notificaciónes es IMPORTANTE activarlas'),
+              title: Text(TextConstants.enableNotifications),
+              content: Text(TextConstants.messageToEnableNotifications),
               actions: [
                 TextButton(
                   onPressed: () => AwesomeNotifications()
                       .requestPermissionToSendNotifications()
                       .then((_) => Navigator.pop(context)),
-                  child: const Text(
-                    'Permitir',
-                    style: TextStyle(
+                  child: Text(
+                    TextConstants.allow,
+                    style: const TextStyle(
                       color: Colors.teal,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -109,7 +107,6 @@ class _AppStateState extends State<AppState> {
 
     PushNotificationService.messagesStream
         .listen((Map<String, dynamic> message) async {
-      print('notificacion recibida $message');
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: createUniqueId(),
@@ -144,41 +141,40 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-
     if (userLogged != null) {
       authService.userLoggedUnNotified = User.fromJson(json.decode(userLogged));
     }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Panic Button App',
+      title: TextConstants.nameApp,
       initialRoute: GPSPermissionGranted != true
           ? 'gps_permission'
           : userLogged != null
               ? 'home'
               : 'login',
       routes: {
-        'home': (_) => HomeScreen(),
-        'login': (_) => LoginScreen(),
-        'checkOtp': (_) => CheckOtpScreen(),
+        'home': (_) => const HomeScreen(),
+        'login': (_) => const LoginScreen(),
+        'checkOtp': (_) => const CheckOtpScreen(),
 
         //SignUp Routes
-        'signup_step_one': (_) => SignUpStepOneScreen(),
+        'signup_step_one': (_) => const SignUpStepOneScreen(),
         'signup_step_two': (_) => SignUpStepTwoScreen(),
         'signup_step_three': (_) => SignUpStepThreeScreen(),
 
         //onBoarding Routes
-        'gps_permission': (_) => GpsPermissionsPage(),
+        'gps_permission': (_) => const GpsPermissionsPage(),
 
         //Notifications Route
-        'notification': (_) => NotificationScreen(),
+        'notification': (_) => const NotificationScreen(),
 
         //Users Routes
-        'edit_user_profile': (_) => EditUserProfileScreen()
+        'edit_user_profile': (_) => const EditUserProfileScreen()
       },
       theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: Colors.grey[300],
-          appBarTheme: AppBarTheme(elevation: 0, color: Colors.indigo),
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
+          appBarTheme: const AppBarTheme(elevation: 0, color: Colors.indigo),
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
               backgroundColor: Colors.indigo, elevation: 0)),
     );
   }

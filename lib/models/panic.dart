@@ -18,6 +18,7 @@ class Panic {
     required this.name,
     required this.phone,
     required this.alias,
+    required this.countryCode,
   });
 
   String title;
@@ -28,6 +29,7 @@ class Panic {
   String name;
   String phone;
   String alias;
+  String countryCode;
 
   factory Panic.fromJson(Map<String, dynamic> json) => Panic(
         title: json["title"],
@@ -41,6 +43,7 @@ class Panic {
         name: json["name"],
         phone: json["phone"],
         alias: json["alias"],
+        countryCode: json["countryCode"]
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,5 +55,6 @@ class Panic {
         "name": name,
         "phone": phone,
         "alias": alias,
+        "countryCode": countryCode
       };
 }

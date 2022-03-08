@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CustomAppBar(
+  const CustomAppBar(
       {Key? key,
       required this.title,
       required this.iconTitle,
       required this.actions})
       : super(key: key);
-  Widget title;
-  Icon iconTitle;
-  List<Widget> actions;
+  final Widget title;
+  final Icon iconTitle;
+  final List<Widget> actions;
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +19,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           iconTitle,
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           title
         ],
       )),
       actions: actions,
-      backgroundColor: Colors.redAccent,
+      backgroundColor: const Color.fromARGB(255, 177, 19, 16),
     );
   }
 

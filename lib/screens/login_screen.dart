@@ -1,10 +1,10 @@
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:panic_button_app/blocs/location/location_bloc.dart';
+import 'package:panic_button_app/constants/texts.dart';
 import 'package:panic_button_app/helpers/validators.dart';
 import 'package:panic_button_app/providers/login_form_provider.dart';
 import 'package:panic_button_app/providers/signup_form_provider.dart';
@@ -13,7 +13,6 @@ import 'package:provider/provider.dart';
 
 import 'package:panic_button_app/ui/input_decorations.dart';
 import 'package:panic_button_app/widgets/widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../blocs/gps/gps_bloc.dart';
 
@@ -49,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
               children: [
                 const SizedBox(height: 10),
-                Text('Ingreso', style: Theme.of(context).textTheme.headline4),
+                Text(TextConstants.login, style: Theme.of(context).textTheme.headline4),
                 const SizedBox(height: 20),
                 _LoginForm()
               ],
@@ -77,11 +76,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(
-                          Colors.redAccent.withOpacity(0.1)),
+                          const Color.fromARGB(255, 177, 19, 16).withOpacity(0.1)),
                       shape: MaterialStateProperty.all(const StadiumBorder())),
-                  child: const Text(
-                    'Crear una nueva cuenta',
-                    style: TextStyle(fontSize: 18, color: Colors.black87),
+                  child: Text(
+                    TextConstants.newAccount,
+                    style: const TextStyle(fontSize: 18, color: Colors.black87),
                   )),
             ),
             const SizedBox(height: 50),
@@ -96,8 +95,6 @@ class _LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginForm = Provider.of<LoginFormProvider>(context);
-    final auth = Provider.of<AuthService>(context, listen: false);
-    print(auth.isLogging);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Form(
@@ -107,7 +104,7 @@ class _LoginForm extends StatelessWidget {
             IntlPhoneField(
               decoration: InputDecorations.authInputDecoration(
                   hintText: '3003543968',
-                  labelText: 'Celular',
+                  labelText: TextConstants.cellPhone,
                   prefixIcon: Icons.lock_outline),
               initialCountryCode: 'CO',
               initialValue: loginForm.phoneNumber,
@@ -116,11 +113,11 @@ class _LoginForm extends StatelessWidget {
               autovalidateMode: AutovalidateMode.always,
               pickerDialogStyle: PickerDialogStyle(
                   searchFieldInputDecoration:
-                      const InputDecoration(label: Text("Buscar país"))),
+                    InputDecoration(label: Text(TextConstants.searchCountry))),
               onChanged: (phone) {
                 loginForm.phoneNumber = '${phone.countryCode}${phone.number}';
               },
-              invalidNumberMessage: "Este número no es valido",
+              invalidNumberMessage: TextConstants.invalidNumber,
             ),
             const SizedBox(height: 10),
             MaterialButton(
@@ -128,11 +125,11 @@ class _LoginForm extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
                 disabledColor: Colors.grey,
                 elevation: 0,
-                color: Colors.redAccent,
+                color: const Color.fromARGB(255, 177, 19, 16),
                 child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                     child: Text(
-                      loginForm.isLoading ? 'Espere' : 'Ingresar',
+                      loginForm.isLoading ? TextConstants.await : TextConstants.login,
                       style: const TextStyle(color: Colors.white),
                     )),
                 onPressed: loginForm.isLoading
@@ -143,7 +140,6 @@ class _LoginForm extends StatelessWidget {
                             Provider.of<AuthService>(context, listen: false);
 
                         if (!loginForm.isValidForm()) return;
-                        print(loginForm.isValidForm());
 
                         loginForm.isLoading = true;
 
@@ -153,11 +149,12 @@ class _LoginForm extends StatelessWidget {
                         if (authService.isValidUser) {
                           Navigator.pushReplacementNamed(context, 'checkOtp');
                         } else {
+                          // ignore: todo
                           //TODO CHANGE TO VALIDATE ERROR
                           CoolAlert.show(
                             context: context,
                             type: CoolAlertType.error,
-                            title: 'Oops...',
+                            title: TextConstants.ops,
                             text: errorMessage,
                             loopAnimation: false,
                           );

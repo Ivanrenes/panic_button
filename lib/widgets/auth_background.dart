@@ -1,9 +1,5 @@
-import 'dart:async';
 
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:panic_button_app/providers/login_form_provider.dart';
-import 'package:provider/provider.dart';
 
 class AuthBackground extends StatelessWidget {
   final Widget child;
@@ -12,15 +8,15 @@ class AuthBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // color: Colors.red,
+    return SizedBox(
+      // color: const Color.fromARGB(255, 177, 19, 16),
       width: double.infinity,
       height: double.infinity,
       child: Stack(
         children: [
           _RedBox(),
           _HeaderIcon(),
-          this.child,
+          child,
         ],
       ),
     );
@@ -33,14 +29,13 @@ class _HeaderIcon extends StatefulWidget {
 }
 
 class _HeaderIconState extends State<_HeaderIcon> {
-  bool _headerIcon = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.only(top: 30),
-        child: Image(
+        margin: const EdgeInsets.only(top: 30),
+        child: const Image(
           image: AssetImage('assets/55-error-outline.gif'),
           width: 150,
           height: 150,
@@ -71,9 +66,9 @@ class _RedBox extends StatelessWidget {
     );
   }
 
-  BoxDecoration _redBackground() => BoxDecoration(
+  BoxDecoration _redBackground() => const BoxDecoration(
           gradient: LinearGradient(colors: [
-        Colors.redAccent[400]!,
+        Color.fromARGB(255, 177, 19, 16),
         Color.fromARGB(255, 221, 5, 48),
       ]));
 }
@@ -86,7 +81,7 @@ class _Bubble extends StatelessWidget {
       height: 100,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
-          color: Color.fromRGBO(255, 255, 255, 0.05)),
+          color: const Color.fromRGBO(255, 255, 255, 0.05)),
     );
   }
 }

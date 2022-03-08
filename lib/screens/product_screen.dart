@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:panic_button_app/constants/texts.dart';
 
 import 'package:provider/provider.dart';
 import 'package:panic_button_app/providers/product_form_provider.dart';
@@ -72,7 +73,6 @@ class _ProductScreenBody extends StatelessWidget {
                       );
 
                       if( pickedFile == null ) {
-                        print('No seleccionó nada');
                         return;
                       }
 
@@ -144,12 +144,14 @@ class _ProductForm extends StatelessWidget {
                 initialValue: product.name,
                 onChanged: ( value ) => product.name = value,
                 validator: ( value ) {
-                  if ( value == null || value.length < 1 )
-                    return 'El nombre es obligatorio'; 
+                  if ( value == null || value.length < 1 ) {
+                    return TextConstants.requiredName;
+                  }
+                  return null; 
                 },
                 decoration: InputDecorations.authInputDecoration(
-                  hintText: 'Nombre del producto', 
-                  labelText: 'Nombre:'
+                  hintText: TextConstants.productName, 
+                  labelText: '${TextConstants.name}:'
                 ),
               ),
 
@@ -170,14 +172,14 @@ class _ProductForm extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 decoration: InputDecorations.authInputDecoration(
                   hintText: '\$150', 
-                  labelText: 'Precio:'
+                  labelText: '${TextConstants.price}:'
                 ),
               ),
               
               const SizedBox( height: 30 ),
               SwitchListTile.adaptive(
                 value: product.available, 
-                title: const Text('Disponible'),
+                title: Text(TextConstants.available),
                 activeColor: Colors.indigo,
                 onChanged: productForm.updateAvailability
               ),
@@ -194,7 +196,7 @@ class _ProductForm extends StatelessWidget {
 
   BoxDecoration _buildBoxDecoration() => BoxDecoration(
     color: Colors.white,
-    borderRadius: const BorderRadius.only( bottomRight: const Radius.circular(25), bottomLeft: const Radius.circular(25)),
+    borderRadius: const BorderRadius.only( bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
     boxShadow: [
       BoxShadow(
         color: Colors.black.withOpacity(0.05),

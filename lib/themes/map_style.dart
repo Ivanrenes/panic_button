@@ -1,4 +1,4 @@
-const UberMapStyle = [
+const uberMapStyle = [
   {
     "featureType": "administrative",
     "elementType": "geometry.fill",
