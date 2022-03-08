@@ -2,30 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:panic_button_app/constants/texts.dart';
 import 'package:panic_button_app/models/panic.dart';
+import 'package:panic_button_app/services/services.dart';
 import 'package:panic_button_app/widgets/custom_appbar.dart';
+import 'package:provider/provider.dart';
 
-class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
-
-  @override
-  State<NotificationScreen> createState() => _NotificationScreenState();
-}
-
-class _NotificationScreenState extends State<NotificationScreen> {
-  final Stream<QuerySnapshot> _notificationsStream = FirebaseFirestore.instance
-      .collection('panics')
-      .orderBy('created')
-      .snapshots();
+class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _notificationService = Provider.of<NotificationsService>(context);
     return Scaffold(
         appBar: CustomAppBar(
           title: Text(TextConstants.notifications),
           iconTitle: const Icon(Icons.notifications),
-          actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.refresh))],
+          actions: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.refresh))
+          ],
         ),
         body: StreamBuilder<QuerySnapshot>(
-            stream: _notificationsStream,
+            stream: _notificationService.notificationsStream,
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -73,7 +67,8 @@ Widget notificationCard(
       width: double.infinity,
       height: 150,
       decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 177, 19, 16), borderRadius: BorderRadius.circular(20)),
+          color: const Color.fromARGB(255, 177, 19, 16),
+          borderRadius: BorderRadius.circular(20)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

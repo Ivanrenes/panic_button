@@ -55,7 +55,9 @@ void main() async {
     providers: [
       BlocProvider(create: (context) => GpsBloc()),
       BlocProvider(create: (context) => LocationBloc()),
-      BlocProvider(create: (context) => MapBloc()),
+      BlocProvider(
+          create: (context) =>
+              MapBloc(locationBloc: BlocProvider.of<LocationBloc>(context))),
       // BlocProvider(
       //     create: (context) =>
       //         MapBloc(locationBloc: BlocProvider.of<LocationBloc>(context))),
@@ -129,6 +131,10 @@ class _AppStateState extends State<AppState> {
         ),
         ChangeNotifierProvider(create: (_) => PanicService()),
         ChangeNotifierProvider(create: (_) => ProductsService()),
+        ChangeNotifierProvider(
+          create: (_) => NotificationsService(),
+          lazy: false,
+        )
       ],
       child: const MyApp(),
     );
@@ -166,7 +172,7 @@ class MyApp extends StatelessWidget {
         'gps_permission': (_) => const GpsPermissionsPage(),
 
         //Notifications Route
-        'notification': (_) => const NotificationScreen(),
+        'notification': (_) => NotificationScreen(),
 
         //Users Routes
         'edit_user_profile': (_) => const EditUserProfileScreen()

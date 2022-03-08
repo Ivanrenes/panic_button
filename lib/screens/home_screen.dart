@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:panic_button_app/constants/texts.dart';
 import 'package:panic_button_app/models/panic.dart';
 import 'package:panic_button_app/models/user.dart';
 import 'package:panic_button_app/services/auth_service.dart';
+import 'package:panic_button_app/services/notifications_service.dart';
 import 'package:panic_button_app/services/panic_service.dart';
 import 'package:panic_button_app/widgets/drawer_widget.dart';
 import 'package:provider/provider.dart';
@@ -58,68 +60,117 @@ class _HomeScreenState extends State<HomeScreen> {
         drawer: const DrawerMenu(),
         body: BlocBuilder<GpsBloc, GpsState>(
           builder: (context, state) {
-            return Stack(children: [
-              state.isAllGranted ? const MapView() : Text(TextConstants.await),
-              Positioned(
-                  top: size.height - 220,
-                  left: size.width - 300,
-                  child: PanicButton(
-                      message: TextConstants.panicButton,
-                      height: 80,
-                      width: 200,
-                      color: panicService.isLoading
-                          ? Colors.blueGrey
-                          : const Color.fromARGB(255, 177, 19, 16),
-                      iconSize: 50,
-                      icon: Icons.notifications,
-                      radius: 100,
-                      onClick: !panicService.isLoading
-                          ? () async {
-                              panicService.isLoading = true;
-                              User userLogged = authService.userLogged;
-                              Panic panicTo = Panic(
-                                title:
-                                    "${userLogged.alias} ${TextConstants.notificationTitle}",
-                                body: TextConstants.notificationBody,
-                                myLocation: userLogged.location,
-                                name: userLogged.name,
-                                phone: userLogged.phone,
-                                alias: userLogged.alias,
-                                zipCode: userLogged.zipCode,
-                                countryCode: userLogged.countryCode,
-                              );
-                              // ignore: todo
-                              //TODO: Sending notification without userId check if it is needed
-                              Response res = await panicService
-                                  .sendPanicNotification(panicTo);
-                              // ignore: todo
-                              //TODO: check validation error because is always true
-                              if (res.statusCode == 201 && json.decode(res.body)['success']) {
-                                title = TextConstants.alertTitleSuccess;
-                                message = TextConstants.alertMessageSuccess;
-                                typeAlert = CoolAlertType.success;
-                              }
-                              CoolAlert.show(
-                                      context: context,
-                                      type: typeAlert,
-                                      title: title,
-                                      text: message,
-                                      loopAnimation: false);
-                              panicService.isLoading = false;
-                            }
-                          : () {})),
-            ]);
+            return BlocBuilder<LocationBloc, LocationState>(
+              builder: (context, locationState) {
+                return BlocBuilder<MapBloc, MapState>(
+                  builder: (context, mapState) {
+                    print(' ALL MARKERS :${mapState.markers}');
+                    return Stack(children: [
+                      state.isAllGranted
+                          ? MapView(
+                              markers: mapState.markers,
+                              initialLocation: locationState.lastKnownLocation!,
+                            )
+                          : Text(TextConstants.await),
+                      Positioned(
+                          top: size.height - 220,
+                          left: size.width - 300,
+                          child: PanicButton(
+                              message: TextConstants.panicButton,
+                              height: 80,
+                              width: 200,
+                              color: panicService.isLoading
+                                  ? Colors.blueGrey
+                                  : const Color.fromARGB(255, 177, 19, 16),
+                              iconSize: 50,
+                              icon: Icons.notifications,
+                              radius: 100,
+                              onClick: !panicService.isLoading
+                                  ? () async {
+                                      panicService.isLoading = true;
+                                      User userLogged = authService.userLogged;
+                                      Panic panicTo = Panic(
+                                        title:
+                                            "${userLogged.alias} ${TextConstants.notificationTitle}",
+                                        body: TextConstants.notificationBody,
+                                        myLocation: userLogged.location,
+                                        name: userLogged.name,
+                                        phone: userLogged.phone,
+                                        alias: userLogged.alias,
+                                        zipCode: userLogged.zipCode,
+                                        countryCode: userLogged.countryCode,
+                                      );
+                                      // ignore: todo
+                                      //TODO: Sending notification without userId check if it is needed
+                                      Response res = await panicService
+                                          .sendPanicNotification(panicTo);
+                                      // ignore: todo
+                                      //TODO: check validation error because is always true
+                                      if (res.statusCode == 201 &&
+                                          json.decode(res.body)['success']) {
+                                        title = TextConstants.alertTitleSuccess;
+                                        message =
+                                            TextConstants.alertMessageSuccess;
+                                        typeAlert = CoolAlertType.success;
+                                      }
+                                      CoolAlert.show(
+                                          context: context,
+                                          type: typeAlert,
+                                          title: title,
+                                          text: message,
+                                          loopAnimation: false);
+                                      panicService.isLoading = false;
+                                    }
+                                  : () {})),
+                    ]);
+                  },
+                );
+              },
+            );
           },
         ));
   }
 }
 
-class MapView extends StatelessWidget {
-  const MapView({Key? key}) : super(key: key);
+class MapView extends StatefulWidget {
+  final LatLng initialLocation;
+  final Set<Marker> markers;
+
+  const MapView(
+      {Key? key, required this.initialLocation, required this.markers})
+      : super(key: key);
+
+  @override
+  State<MapView> createState() => _MapViewState();
+}
+
+class _MapViewState extends State<MapView> {
+  BitmapDescriptor? myIcon;
+  Set<Marker> _markers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(), "assets/marker-icon.png")
+        .then((onValue) {
+      myIcon = onValue;
+    });
+
+    // widget.markers.add(Marker(
+    //     markerId: MarkerId(widget.initialLocation.toString()),
+    //     position: LatLng(
+    //         widget.initialLocation.latitude, widget.initialLocation.longitude),
+    //     icon: BitmapDescriptor.defaultMarker,
+    //     infoWindow: const InfoWindow(
+    //       title: "Your current position",
+    //     )));
+  }
 
   @override
   Widget build(BuildContext context) {
     final mapBloc = BlocProvider.of<MapBloc>(context);
+
     return BlocBuilder<LocationBloc, LocationState>(
       builder: (context, state) {
         if (state.lastKnownLocation == null) {
@@ -131,11 +182,25 @@ class MapView extends StatelessWidget {
             target: state.lastKnownLocation!,
             zoom: 16,
           ),
+          markers: widget.markers,
           zoomControlsEnabled: true,
           tileOverlays: const {},
           onMapCreated: (controller) =>
-              mapBloc.add(OnMapInitialzedEvent(controller)),
+              mapBloc.add(OnMapInitializedEvent(controller)),
         );
+        // return StreamBuilder<QuerySnapshot>(
+        //     stream: _notificationService.notificationsStream,
+        //     builder: (context, snapshot) {
+        //       if (snapshot.hasData && snapshot.data!.size > 0) {
+        //         snapshot.data!.docs.map((DocumentSnapshot document) {
+        //           Map<String, dynamic> data =
+        //               document.data()! as Map<String, dynamic>;
+
+        //         });
+        //         print(_markers);
+        //       }
+
+        //     });
       },
     );
   }
