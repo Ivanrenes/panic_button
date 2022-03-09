@@ -64,12 +64,13 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, locationState) {
                 return BlocBuilder<MapBloc, MapState>(
                   builder: (context, mapState) {
-                    print(' ALL MARKERS :${mapState.markers}');
                     return Stack(children: [
                       state.isAllGranted
                           ? MapView(
                               markers: mapState.markers,
-                              initialLocation: locationState.lastKnownLocation!,
+                              initialLocation:
+                                  locationState.lastKnownLocation ??
+                                      LatLng(0, 0),
                             )
                           : Text(TextConstants.await),
                       Positioned(

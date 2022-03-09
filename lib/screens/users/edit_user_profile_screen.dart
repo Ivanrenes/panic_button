@@ -55,9 +55,9 @@ class _EditUserForm extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.all(20),
         child: SizedBox(
-          height: size.height -370,
+          height: size.height * 0.6,
           width: double.infinity,
           child: CardContainer(
             child: Form(
@@ -138,11 +138,8 @@ class _EditUserForm extends StatelessWidget {
                     validator: isValidEmail,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  const SizedBox(
-                    height: 25,
-                  ),
+                  Expanded(child: Container()),
                   MaterialButton(
-                    
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                       disabledColor: Colors.grey,
@@ -188,8 +185,8 @@ class _EditUserForm extends StatelessWidget {
                                           context: context,
                                           type: CoolAlertType.success,
                                           title: TextConstants.congratulations,
-                                          text:
-                                              TextConstants.profileSuccessfullyModified,
+                                          text: TextConstants
+                                              .profileSuccessfullyModified,
                                           loopAnimation: false)
                                     }
                                   : CoolAlert.show(

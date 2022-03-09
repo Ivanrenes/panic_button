@@ -24,21 +24,20 @@ Widget _buildHeader(BuildContext context) {
   return DrawerHeader(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: UserAccountsDrawerHeader(
-        decoration: const BoxDecoration(color: Color.fromARGB(255, 136, 7, 4)),
-        currentAccountPicture: ClipOval(
-            child: CircleAvatar(
-                backgroundColor: Colors.blueGrey,
-                backgroundImage: authService.userLogged.avatar != ''
-                    ? FadeInImage.assetNetwork(
-                            placeholder: 'assets/jar-loading.gif',
-                            image: authService.userLogged.avatar)
-                        .image
-                    : const AssetImage('assets/no-image.png'))),
-        accountName: Text(
-            "${authService.userLogged.name} ${authService.userLogged.lastname} | ${authService.userLogged.alias}"),
-        accountEmail: Text(
-            '${authService.userLogged.email} | ${authService.userLogged.phone}'),
-      ));
+          decoration:
+              const BoxDecoration(color: Color.fromARGB(255, 136, 7, 4)),
+          currentAccountPicture: ClipOval(
+              child: CircleAvatar(
+                  backgroundColor: Colors.blueGrey,
+                  backgroundImage: authService.userLogged.avatar != ''
+                      ? FadeInImage.assetNetwork(
+                              placeholder: 'assets/jar-loading.gif',
+                              image: authService.userLogged.avatar)
+                          .image
+                      : const AssetImage('assets/no-image.png'))),
+          accountName: Text("\n ${authService.userLogged.alias}"),
+          accountEmail: Text(
+              "${authService.userLogged.name} ${authService.userLogged.lastname}")));
 }
 
 Widget _buildMenuItems(BuildContext context) {

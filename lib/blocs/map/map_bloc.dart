@@ -84,16 +84,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   void _onNotificationNewNotification(
       UpdateNotificationMarkerEvent event, Emitter<MapState> emit) {
-    event.notifications.docs.forEach((notification) {
-      myMarkersParsed!.add(Marker(
-          markerId: MarkerId(notification.id),
-          position: LatLng(notification["my_location"]["lat"],
-              notification["my_location"]["lng"]),
-          icon: myIcon ?? BitmapDescriptor.defaultMarker,
-          infoWindow: const InfoWindow(
-            title: "Panic Position",
-          )));
-    });
+    myMarkersParsed = <Marker>{};
+    if (event.notifications.docs.isNotEmpty) {
+      event.notifications.docs.forEach((notification) {
+        myMarkersParsed!.add(Marker(
+            markerId: MarkerId(notification.id),
+            position: LatLng(notification["my_location"]["lat"],
+                notification["my_location"]["lng"]),
+            icon: myIcon ?? BitmapDescriptor.defaultMarker,
+            infoWindow: const InfoWindow(
+              title: "Panic Position",
+            )));
+      });
+    }
 
     emit(state.copyWith(markers: myMarkersParsed));
   }
