@@ -52,155 +52,158 @@ class _EditUserForm extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final editUserFormProvider = Provider.of<EditUserFormProvider>(context);
     final authService = Provider.of<AuthService>(context);
+    final ScrollController _scrollController = ScrollController(
+      initialScrollOffset: 120,
+      keepScrollOffset: true,
+    );
 
     return SingleChildScrollView(
+      controller: _scrollController,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Container(
-          height: size.height * 0.7,
-          width: double.infinity,
-          child: CardContainer(
-            child: Form(
-              key: editUserFormProvider.formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    initialValue: editUserFormProvider.name,
-                    decoration: InputDecorations.authInputDecoration(
-                        hintText: TextConstants.john,
-                        labelText: TextConstants.names,
-                        prefixIcon: Icons.person),
-                    onChanged: (value) {
-                      editUserFormProvider.name = value;
-                    },
-                    validator: checkEmpty,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    initialValue: editUserFormProvider.lastName,
-                    decoration: InputDecorations.authInputDecoration(
-                        hintText: TextConstants.doe,
-                        labelText: TextConstants.lastnames,
-                        prefixIcon: Icons.person),
-                    onChanged: (value) {
-                      editUserFormProvider.lastName = value;
-                    },
-                    validator: checkEmpty,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    initialValue: editUserFormProvider.alias,
-                    decoration: InputDecorations.authInputDecoration(
-                        hintText: TextConstants.myBusiness,
-                        labelText: TextConstants.nameBusiness,
-                        prefixIcon: Icons.business_outlined),
-                    onChanged: (value) {
-                      editUserFormProvider.alias = value;
-                    },
-                    validator: checkEmpty,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    initialValue: editUserFormProvider.address,
-                    decoration: InputDecorations.authInputDecoration(
-                        hintText: TextConstants.testAddress,
-                        labelText: TextConstants.address,
-                        prefixIcon: Icons.home),
-                    onChanged: (value) {
-                      editUserFormProvider.address = value;
-                    },
-                    validator: checkEmpty,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    initialValue: editUserFormProvider.email,
-                    decoration: InputDecorations.authInputDecoration(
-                        hintText: TextConstants.testEmail,
-                        labelText: TextConstants.email,
-                        prefixIcon: Icons.email),
-                    onChanged: (value) {
-                      editUserFormProvider.email = value;
-                    },
-                    validator: isValidEmail,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                  ),
-                  Expanded(child: Container()),
-                  MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      disabledColor: Colors.grey,
-                      elevation: 0,
-                      color: const Color.fromARGB(255, 177, 19, 16),
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 15),
-                          child: Text(
-                            TextConstants.saveChanges,
-                            style: const TextStyle(color: Colors.white),
-                          )),
-                      onPressed: !editUserFormProvider.isLoading
-                          ? () async {
-                              SharedPreferences _prefs =
-                                  await SharedPreferences.getInstance();
+        child: CardContainer(
+          child: Form(
+            key: editUserFormProvider.formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  initialValue: editUserFormProvider.name,
+                  decoration: InputDecorations.authInputDecoration(
+                      hintText: TextConstants.john,
+                      labelText: TextConstants.names,
+                      prefixIcon: Icons.person),
+                  onChanged: (value) {
+                    editUserFormProvider.name = value;
+                  },
+                  validator: checkEmpty,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  initialValue: editUserFormProvider.lastName,
+                  decoration: InputDecorations.authInputDecoration(
+                      hintText: TextConstants.doe,
+                      labelText: TextConstants.lastnames,
+                      prefixIcon: Icons.person),
+                  onChanged: (value) {
+                    editUserFormProvider.lastName = value;
+                  },
+                  validator: checkEmpty,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  initialValue: editUserFormProvider.alias,
+                  decoration: InputDecorations.authInputDecoration(
+                      hintText: TextConstants.myBusiness,
+                      labelText: TextConstants.nameBusiness,
+                      prefixIcon: Icons.business_outlined),
+                  onChanged: (value) {
+                    editUserFormProvider.alias = value;
+                  },
+                  validator: checkEmpty,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  initialValue: editUserFormProvider.address,
+                  decoration: InputDecorations.authInputDecoration(
+                      hintText: TextConstants.testAddress,
+                      labelText: TextConstants.address,
+                      prefixIcon: Icons.home),
+                  onChanged: (value) {
+                    editUserFormProvider.address = value;
+                  },
+                  validator: checkEmpty,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  initialValue: editUserFormProvider.email,
+                  decoration: InputDecorations.authInputDecoration(
+                      hintText: TextConstants.testEmail,
+                      labelText: TextConstants.email,
+                      prefixIcon: Icons.email),
+                  onChanged: (value) {
+                    editUserFormProvider.email = value;
+                  },
+                  validator: isValidEmail,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    disabledColor: Colors.grey,
+                    elevation: 0,
+                    color: const Color.fromARGB(255, 177, 19, 16),
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 15),
+                        child: Text(
+                          TextConstants.saveChanges,
+                          style: const TextStyle(color: Colors.white),
+                        )),
+                    onPressed: !editUserFormProvider.isLoading
+                        ? () async {
+                            SharedPreferences _prefs =
+                                await SharedPreferences.getInstance();
 
-                              editUserFormProvider.isLoading = true;
-                              final res = await authService.updateUser(
-                                  editUserFormProvider.email,
-                                  editUserFormProvider.alias,
-                                  editUserFormProvider.address,
-                                  editUserFormProvider.name,
-                                  editUserFormProvider.lastName);
+                            editUserFormProvider.isLoading = true;
+                            final res = await authService.updateUser(
+                                editUserFormProvider.email,
+                                editUserFormProvider.alias,
+                                editUserFormProvider.address,
+                                editUserFormProvider.name,
+                                editUserFormProvider.lastName);
 
-                              res
-                                  ? {
-                                      authService.userLogged.email =
-                                          editUserFormProvider.email,
-                                      authService.userLogged.alias =
-                                          editUserFormProvider.alias,
-                                      authService.userLogged.address =
-                                          editUserFormProvider.address,
-                                      authService.userLogged.name =
-                                          editUserFormProvider.name,
-                                      authService.userLogged.lastname =
-                                          editUserFormProvider.lastName,
-                                      _prefs.setString(
-                                          'userLogged',
-                                          json.encode(
-                                              authService.userLogged.toJson())),
-                                      CoolAlert.show(
-                                          context: context,
-                                          type: CoolAlertType.success,
-                                          title: TextConstants.congratulations,
-                                          text: TextConstants
-                                              .profileSuccessfullyModified,
-                                          loopAnimation: false)
-                                    }
-                                  : CoolAlert.show(
-                                      context: context,
-                                      type: CoolAlertType.error,
-                                      title: TextConstants.alertTitleError,
-                                      text: TextConstants.saveError,
-                                      loopAnimation: false);
+                            res
+                                ? {
+                                    authService.userLogged.email =
+                                        editUserFormProvider.email,
+                                    authService.userLogged.alias =
+                                        editUserFormProvider.alias,
+                                    authService.userLogged.address =
+                                        editUserFormProvider.address,
+                                    authService.userLogged.name =
+                                        editUserFormProvider.name,
+                                    authService.userLogged.lastname =
+                                        editUserFormProvider.lastName,
+                                    _prefs.setString(
+                                        'userLogged',
+                                        json.encode(
+                                            authService.userLogged.toJson())),
+                                    CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.success,
+                                        title: TextConstants.congratulations,
+                                        text: TextConstants
+                                            .profileSuccessfullyModified,
+                                        loopAnimation: false)
+                                  }
+                                : CoolAlert.show(
+                                    context: context,
+                                    type: CoolAlertType.error,
+                                    title: TextConstants.alertTitleError,
+                                    text: TextConstants.saveError,
+                                    loopAnimation: false);
 
-                              editUserFormProvider.isLoading = false;
-                            }
-                          : null)
-                ],
-              ),
+                            editUserFormProvider.isLoading = false;
+                          }
+                        : null)
+              ],
             ),
           ),
         ),
