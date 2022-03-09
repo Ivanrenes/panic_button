@@ -28,6 +28,7 @@ abstract class TextConstants {
   static String names = 'Nombres';
   static String noTitle = 'No title';
   static String noBody = 'No body';
+  static String verificationCode = 'Código de verificación';
   static String testAvatar = 'test.jgp';
   static String myBusiness = 'Mi comercio';
   static String nameBusiness = 'Nombre del establecimiento';

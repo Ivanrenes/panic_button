@@ -27,7 +27,7 @@ class CheckOtpScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
                 Center(
-                  child: Text('Código de verificación',
+                  child: Text(TextConstants.verificationCode,
                       style: Theme.of(context).textTheme.headline5),
                 ),
                 const SizedBox(height: 20),
