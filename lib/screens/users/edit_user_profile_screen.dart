@@ -49,7 +49,6 @@ class _EditUserForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final editUserFormProvider = Provider.of<EditUserFormProvider>(context);
     final authService = Provider.of<AuthService>(context);
     final ScrollController _scrollController = ScrollController(
@@ -140,7 +139,7 @@ class _EditUserForm extends StatelessWidget {
                   validator: isValidEmail,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 MaterialButton(
