@@ -147,7 +147,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
-    if (userLogged != null) {
+    if (userLogged != null && userLogged.runtimeType != bool) {
       authService.userLoggedUnNotified = User.fromJson(json.decode(userLogged));
     }
     return MaterialApp(
@@ -155,7 +155,7 @@ class MyApp extends StatelessWidget {
       title: TextConstants.nameApp,
       initialRoute: GPSPermissionGranted != true
           ? 'gps_permission'
-          : userLogged != null
+          : (userLogged != null && userLogged.runtimeType != bool)
               ? 'home'
               : 'login',
       routes: {
