@@ -8,32 +8,38 @@ import 'package:provider/provider.dart';
 import 'package:panic_button_app/widgets/widgets.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
-
 class CheckOtpScreen extends StatelessWidget {
   const CheckOtpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final user = ModalRoute.of(context)!.settings.arguments;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: AuthBackground(
           child: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 250),
-            CardContainer(
+            SizedBox(height: size.height * 0.35),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: _createCardShape(),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Center(
-                  child: Text('Código de verificación',
-                      style: Theme.of(context).textTheme.headline5),
+                  children: [
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Text('Código de verificación',
+                          style: Theme.of(context).textTheme.headline5),
+                    ),
+                    const SizedBox(height: 20),
+                    _otpVerificationForm()
+                  ],
                 ),
-                const SizedBox(height: 20),
-                _otpVerificationForm()
-              ],
-            )),
+              ),
+            ),
             const SizedBox(height: 50),
             TextButton(
                 onPressed: () => {
@@ -41,7 +47,6 @@ class CheckOtpScreen extends StatelessWidget {
                         {Navigator.of(context).pop()}
                       else
                         {Navigator.popAndPushNamed(context, 'login')}
-                        
                     },
                 style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(
@@ -97,3 +102,14 @@ class _otpVerificationForm extends StatelessWidget {
     );
   }
 }
+
+BoxDecoration _createCardShape() => BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 15,
+            offset: Offset(0, 5),
+          )
+        ]);

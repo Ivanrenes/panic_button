@@ -55,9 +55,9 @@ class _EditUserForm extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: SizedBox(
-          height: size.height * 0.6,
+          height: size.height * 0.7,
           width: double.infinity,
           child: CardContainer(
             child: Form(
