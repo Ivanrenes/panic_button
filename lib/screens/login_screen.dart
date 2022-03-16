@@ -106,9 +106,9 @@ class _LoginForm extends StatelessWidget {
                   hintText: '3003543968',
                   labelText: TextConstants.cellPhone,
                   prefixIcon: Icons.lock_outline),
-              initialCountryCode: 'CO',
+              initialCountryCode: 'US',
               initialValue: loginForm.phoneNumber,
-              countries: const ["CO", "US"],
+              countries: const ["US", "DO", "CO"],
               validator: checkEmpty,
               autovalidateMode: AutovalidateMode.always,
               pickerDialogStyle: PickerDialogStyle(
