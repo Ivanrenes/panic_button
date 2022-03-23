@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:panic_button_app/models/device.dart';
 
@@ -23,7 +25,13 @@ class SignUpFormProvider extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _administrator = false;
+  bool get administrator => _administrator;
 
+  set administrator(bool value) {
+    _administrator = value;
+    notifyListeners();
+  }
   set isLoading(bool value) {
     _isLoading = value;
     notifyListeners();

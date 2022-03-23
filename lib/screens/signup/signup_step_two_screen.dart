@@ -68,12 +68,60 @@ class _SignUpStepTwoForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final signUpForm = Provider.of<SignUpFormProvider>(context);
-    final authService = Provider.of<AuthService>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);   
+    
+    // List of items in our dropdown menu
+    var items = [    
+      {'title': TextConstants.user, 'value': false},
+      {'title': TextConstants.administrator, 'value': true}
+    ];
+
+  Widget selectInput() {
+    return FormField<String>(
+      builder: (FormFieldState<String> state) {
+        return InputDecorator(
+          decoration: InputDecorations.authInputDecoration(
+            hintText: TextConstants.testEmail,
+            labelText: TextConstants.selectAdministrator,
+            prefixIcon: Icons.person),
+          // isEmpty: _currentSelectedValue == '',
+          child: DropdownButtonHideUnderline(
+            child: Container(
+              margin: const EdgeInsets.only(top: 0),
+              // padding: const EdgeInsets.only(top: 20),
+              height: 15,
+              child: DropdownButton(
+                    
+                  // Initial Value
+                  value: signUpForm.administrator,
+                    
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),    
+                    
+                  // Array list of items
+                  items: items.map<DropdownMenuItem<bool>>((dynamic val) {
+                    return DropdownMenuItem(
+                      value: val['value'],
+                      child: Text(val['title']),
+                    );
+                  }).toList(),
+                  // After selecting the desired option,it will
+                  // change button value to selected value
+                  onChanged: (bool? value) => signUpForm.administrator = value!,
+                ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
     return Form(
       key: signUpForm.formKeyTwo,
       child: Column(
         children: [
+          const SizedBox(height: 10),
+          selectInput(),
           const SizedBox(height: 10),
           TextFormField(
               autocorrect: false,
@@ -168,6 +216,7 @@ class _SignUpStepTwoForm extends StatelessWidget {
                     if (!signUpForm.isValidStepTwoForm()) return;
 
                     final user = User(
+                        administrator: signUpForm.administrator,
                         phone: signUpForm.phone,
                         address: signUpForm.address,
                         alias: signUpForm.alias,

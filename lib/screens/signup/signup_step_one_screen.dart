@@ -72,9 +72,9 @@ class _SignUpStepOneForm extends StatelessWidget {
                 hintText: '3003543968',
                 labelText: TextConstants.cellPhone,
                 prefixIcon: Icons.lock_outline),
-            initialCountryCode: 'CO',
+            initialCountryCode: 'US',
             initialValue: signUpForm.phone,
-            countries: const ["CO", "US"],
+            countries: const ["US", "DO", "CO"],
             validator: checkEmpty,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             pickerDialogStyle: PickerDialogStyle(

@@ -75,4 +75,7 @@ abstract class TextConstants {
   static String gpstitle = 'Activa tu ubicación';
   static String gpsMessage = 'Panic Button necesita permiso para tú ubicación para brindarte sus servicios';
   static String messageToEnableNotifications = 'Nuestra App funcióna gracias a la notificaciónes es IMPORTANTE activarlas';
+  static String user = 'Usuario';
+  static String administrator = 'Administrador';
+  static String selectAdministrator = 'Eres administrador ?';
 }

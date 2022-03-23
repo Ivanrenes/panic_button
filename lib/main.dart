@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:panic_button_app/blocs/location/location_bloc.dart';
@@ -73,11 +75,11 @@ class AppState extends StatefulWidget {
   State<AppState> createState() => _AppStateState();
 }
 
-class _AppStateState extends State<AppState> {
+class _AppStateState extends State<AppState> with WidgetsBindingObserver{
   @override
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance?.addObserver(this);
     AwesomeNotifications().isNotificationAllowed().then(
       (isAllowed) {
         if (!isAllowed) {
@@ -107,8 +109,24 @@ class _AppStateState extends State<AppState> {
       },
     );
 
+    AwesomeNotifications().actionStream.listen(
+      (ReceivedNotification receivedNotification){
+          // Navigator.of(context).pushNamed(
+          //     '/NotificationPage',
+          //     arguments: {
+          //         // your page params. I recommend you to pass the
+          //         // entire *receivedNotification* object
+          //         id: receivedNotification.id
+          //     }
+          // );
+
+      }
+    );
     PushNotificationService.messagesStream
         .listen((Map<String, dynamic> message) async {
+          print('abrio notificación desde main');
+    // FlutterAppBadger.updateBadgeCount(0);
+    // FlutterAppBadger.removeBadge();
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: createUniqueId(),
@@ -119,6 +137,24 @@ class _AppStateState extends State<AppState> {
         ),
       );
     });
+
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed){
+      FlutterAppBadger.updateBadgeCount(1);
+      Timer.periodic(const Duration(seconds: 5), (timer) {
+        FlutterAppBadger.removeBadge();
+        // print('remove');
+      });
+      // print('resummmeeennn');
+    }
   }
 
   @override
