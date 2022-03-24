@@ -120,8 +120,8 @@ class _SignUpStepTwoForm extends StatelessWidget {
       key: signUpForm.formKeyTwo,
       child: Column(
         children: [
-          const SizedBox(height: 10),
-          selectInput(),
+          // const SizedBox(height: 10),
+          // selectInput(),
           const SizedBox(height: 10),
           TextFormField(
               autocorrect: false,

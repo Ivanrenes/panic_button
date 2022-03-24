@@ -18,7 +18,7 @@ class PanicService extends ChangeNotifier {
 
   Future<Response> sendPanicNotification(Panic panic) async {
     Response res = await http.post(
-        endpoint: '/api/push-notification',
+        endpoint: '/api/push',
         body: json.encode(panic.toJson()),
         params: {});
     return res;
